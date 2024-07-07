@@ -30,7 +30,7 @@ fun HabitMenuItem(
     ) {
         Text(
             text = text,
-            fontSize = 16.sp,
+            fontSize = 18.sp,
             modifier = Modifier.padding(10.dp),
             color = if (enabled) enabledColor else disabledColor
         )
