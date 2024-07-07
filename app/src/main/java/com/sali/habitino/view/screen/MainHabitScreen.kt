@@ -1,5 +1,10 @@
 package com.sali.habitino.view.screen
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,13 +19,19 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sali.habitino.view.component.HabitItem
 import com.sali.habitino.view.component.HabitMenuItem
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun MainHabitScreen() {
+fun SharedTransitionScope.MainHabitScreen(
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    onHabitItemClickListener: (
+        title: String, description: String,
+        state: String, isDone: Boolean
+    ) -> Unit
+) {
 
     var badHabitListEnabled by remember { mutableStateOf(true) }
     var goodHabitListEnabled by remember { mutableStateOf(false) }
@@ -73,16 +84,27 @@ fun MainHabitScreen() {
                 .padding(10.dp)
         ) {
             items(3) {
-                HabitItem(title = "Habit $it")
+                HabitItem(
+                    modifier = Modifier
+                        .sharedElement(
+                            state = rememberSharedContentState(key = "title"),
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            boundsTransform = { _, _ ->
+                                tween(durationMillis = 1000)
+                            }
+                        )
+                        .clickable {
+                            onHabitItemClickListener(
+                                " ",
+                                " ",
+                                " ",
+                                true)
+                        },
+                    title = "Habit $it"
+                )
             }
         }
 
     }
 
-}
-
-@Composable
-@Preview(showBackground = true)
-fun MainHabitScreenPreview() {
-    MainHabitScreen()
 }

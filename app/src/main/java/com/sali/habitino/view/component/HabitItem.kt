@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun HabitItem(title: String) {
+fun HabitItem(modifier: Modifier, title: String) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -23,7 +23,7 @@ fun HabitItem(title: String) {
         Text(
             text = title,
             fontSize = 16.sp,
-            modifier = Modifier.padding(vertical = 20.dp, horizontal = 15.dp)
+            modifier = modifier.padding(vertical = 20.dp, horizontal = 15.dp)
         )
     }
 }
