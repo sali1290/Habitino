@@ -1,4 +1,4 @@
-package com.sali.habitino.ui.theme
+package com.sali.habitino.view.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

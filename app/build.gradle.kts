@@ -78,5 +78,5 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     ksp(libs.hilt.compiler)
 
-    implementation(libs.firebase.bom)
+    implementation(platform(libs.firebase.bom))
 }
