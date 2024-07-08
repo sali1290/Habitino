@@ -87,7 +87,7 @@ fun SharedTransitionScope.MainHabitScreen(
                 HabitItem(
                     modifier = Modifier
                         .sharedElement(
-                            state = rememberSharedContentState(key = "title"),
+                            state = rememberSharedContentState(key = "Habit $it"),
                             animatedVisibilityScope = animatedVisibilityScope,
                             boundsTransform = { _, _ ->
                                 tween(durationMillis = 1000)
@@ -95,7 +95,7 @@ fun SharedTransitionScope.MainHabitScreen(
                         )
                         .clickable {
                             onHabitItemClickListener(
-                                " ",
+                                "Habit $it",
                                 " ",
                                 " ",
                                 true)
