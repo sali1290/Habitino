@@ -21,7 +21,9 @@ import com.sali.habitino.view.screen.MainHabitScreen
 import com.sali.habitino.view.screen.Screens
 import com.sali.habitino.view.theme.HabitinoTheme
 import com.sali.habitino.view.utils.ArgumentKeys
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
