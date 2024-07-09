@@ -36,7 +36,7 @@ fun MainHabitScreen() {
         selfAddedHabitViewModel.getAllSelfAddedHabits()
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    Column(modifier = Modifier.fillMaxSize().padding(vertical = 10.dp)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -82,11 +82,22 @@ fun MainHabitScreen() {
         ) {
             if (selfAddedHabitListEnabled && selfAddedHabitsState.value.isNotEmpty()) {
                 itemsIndexed(selfAddedHabitsState.value) { _, item ->
-                    HabitItem(title = item.title) { }
+                    HabitItem(
+                        title = item.title,
+                        description = item.description,
+                        solution = item.solution,
+                        state = item.state,
+                        isCompleted = item.isCompleted
+                    )
                 }
             } else {
                 items(3) {
-                    HabitItem(title = "Habit $it") { }
+                    HabitItem(
+                        title = "Habit $it",
+                        description = "Description $it",
+                        solution = "Solution $it",
+                        state = "State $it"
+                    )
                 }
             }
         }
