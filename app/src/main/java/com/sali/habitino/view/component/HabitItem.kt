@@ -43,7 +43,8 @@ fun HabitItem(
     description: String,
     solution: String? = null,
     state: String,
-    isCompleted: Boolean? = null
+    isCompleted: Boolean,
+    onCompleteClick: () -> Unit,
 ) {
     var showDetail by remember { mutableStateOf(false) }
     var cardHeight by remember { mutableStateOf(0.dp) }
@@ -66,9 +67,9 @@ fun HabitItem(
                 ),
             contentAlignment = Alignment.Center
         ) {
-            IconButton(onClick = { }) {
+            IconButton(onClick = onCompleteClick) {
                 Icon(
-                    imageVector = if (isCompleted == true)
+                    imageVector = if (isCompleted)
                         Icons.Default.Check
                     else
                         Icons.Default.Clear,

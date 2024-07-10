@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.sali.habitino.model.dto.SelfAddedHabit
 
 @Dao
@@ -14,6 +15,9 @@ interface SelfAddedHabitDao {
 
     @Query("SELECT * FROM selfaddedhabit WHERE title LIKE :title LIMIT 1")
     fun findByTitle(title: String): SelfAddedHabit
+
+    @Update
+    fun updateHabit(habit: SelfAddedHabit)
 
     @Insert
     fun insert(selfAddedHabit: SelfAddedHabit)

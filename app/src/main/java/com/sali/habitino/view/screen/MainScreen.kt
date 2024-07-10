@@ -6,99 +6,69 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.sali.habitino.view.component.HabitItem
-import com.sali.habitino.view.component.HabitMenuItem
-import com.sali.habitino.viewmodel.SelfAddedHabitViewModel
+import com.sali.habitino.view.component.HabitTypeItem
+import com.sali.habitino.view.component.RemoteHabitsList
+import com.sali.habitino.view.component.SelfAddedHabitsList
 
 @Composable
 fun MainHabitScreen() {
-    val selfAddedHabitViewModel: SelfAddedHabitViewModel = hiltViewModel()
-
-    var badHabitListEnabled by remember { mutableStateOf(true) }
-    var goodHabitListEnabled by remember { mutableStateOf(false) }
-    var selfAddedHabitListEnabled by remember { mutableStateOf(false) }
-
-    val selfAddedHabitsState = selfAddedHabitViewModel.selfAddedHabits.collectAsState()
-    LaunchedEffect(key1 = Unit) {
-        selfAddedHabitViewModel.getAllSelfAddedHabits()
-    }
-
-    Column(modifier = Modifier.fillMaxSize().padding(vertical = 10.dp)) {
+    var habitListEnabled by remember { mutableIntStateOf(0) }
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(vertical = 10.dp)
+    ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            HabitMenuItem(
+            HabitTypeItem(
                 modifier = Modifier.weight(0.33f),
                 text = "Bad habits",
-                enabled = badHabitListEnabled,
+                enabled = habitListEnabled == 0,
                 enabledColor = Color.Red
             ) {
-                badHabitListEnabled = true
-                goodHabitListEnabled = false
-                selfAddedHabitListEnabled = false
+                habitListEnabled = 0
             }
 
-            HabitMenuItem(
+            HabitTypeItem(
                 modifier = Modifier.weight(0.33f),
                 text = "Good habits",
-                enabled = goodHabitListEnabled,
+                enabled = habitListEnabled == 1,
                 enabledColor = Color.Green
             ) {
-                badHabitListEnabled = false
-                goodHabitListEnabled = true
-                selfAddedHabitListEnabled = false
+                habitListEnabled = 1
             }
 
-            HabitMenuItem(
+            HabitTypeItem(
                 modifier = Modifier.weight(0.33f),
                 text = "Self added",
-                enabled = selfAddedHabitListEnabled,
+                enabled = habitListEnabled == 2,
                 enabledColor = Color.DarkGray
             ) {
-                badHabitListEnabled = false
-                goodHabitListEnabled = false
-                selfAddedHabitListEnabled = true
+                habitListEnabled = 2
             }
         }
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(10.dp)
-        ) {
-            if (selfAddedHabitListEnabled && selfAddedHabitsState.value.isNotEmpty()) {
-                itemsIndexed(selfAddedHabitsState.value) { _, item ->
-                    HabitItem(
-                        title = item.title,
-                        description = item.description,
-                        solution = item.solution,
-                        state = item.state,
-                        isCompleted = item.isCompleted
-                    )
-                }
-            } else {
-                items(3) {
-                    HabitItem(
-                        title = "Habit $it",
-                        description = "Description $it",
-                        solution = "Solution $it",
-                        state = "State $it"
-                    )
-                }
+        when (habitListEnabled) {
+            0 -> {
+                RemoteHabitsList()
+            }
+
+            1 -> {
+                RemoteHabitsList()
+            }
+
+            2 -> {
+                SelfAddedHabitsList()
             }
         }
 

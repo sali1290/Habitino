@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun HabitMenuItem(
+fun HabitTypeItem(
     modifier: Modifier = Modifier,
     text: String,
     enabled: Boolean,

@@ -6,12 +6,12 @@ import javax.inject.Inject
 
 class SelfAddedHabitRepoImpl @Inject constructor(private val selfAddedHabitDao: SelfAddedHabitDao) :
     SelfAddedHabitRepo {
-    override suspend fun insert(selfAddedHabit: SelfAddedHabit) {
-        selfAddedHabitDao.insert(selfAddedHabit)
+    override suspend fun insert(habit: SelfAddedHabit) {
+        selfAddedHabitDao.insert(habit)
     }
 
-    override suspend fun delete(selfAddedHabit: SelfAddedHabit) {
-        selfAddedHabitDao.delete(selfAddedHabit)
+    override suspend fun delete(habit: SelfAddedHabit) {
+        selfAddedHabitDao.delete(habit)
     }
 
     override suspend fun getAllHabits(): List<SelfAddedHabit> {
@@ -21,4 +21,9 @@ class SelfAddedHabitRepoImpl @Inject constructor(private val selfAddedHabitDao: 
     override suspend fun getSelfAddedHabit(title: String): SelfAddedHabit {
         return selfAddedHabitDao.findByTitle(title)
     }
+
+    override suspend fun updateHabit(habit: SelfAddedHabit) {
+        selfAddedHabitDao.updateHabit(habit)
+    }
+
 }

@@ -4,12 +4,13 @@ import com.sali.habitino.model.dto.SelfAddedHabit
 
 interface SelfAddedHabitRepo {
 
-    suspend fun insert(selfAddedHabit: SelfAddedHabit)
+    suspend fun insert(habit: SelfAddedHabit)
 
-    suspend fun delete(selfAddedHabit: SelfAddedHabit)
+    suspend fun delete(habit: SelfAddedHabit)
 
     suspend fun getAllHabits(): List<SelfAddedHabit>
 
     suspend fun getSelfAddedHabit(title: String): SelfAddedHabit
 
+    suspend fun updateHabit(habit: SelfAddedHabit)
 }

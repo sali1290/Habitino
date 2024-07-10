@@ -15,32 +15,32 @@ import javax.inject.Inject
 class SelfAddedHabitViewModel @Inject constructor(private val selfAddedHabitRepo: SelfAddedHabitRepo) :
     ViewModel() {
 
-    private var _selfAddedHabits = MutableStateFlow<List<SelfAddedHabit>>(emptyList())
-    var selfAddedHabits = _selfAddedHabits.asStateFlow()
+    private var _habits = MutableStateFlow<List<SelfAddedHabit>>(emptyList())
+    var habits = _habits.asStateFlow()
     fun getAllSelfAddedHabits() {
         viewModelScope.launch(Dispatchers.IO) {
-            _selfAddedHabits.value = selfAddedHabitRepo.getAllHabits()
+            _habits.value = selfAddedHabitRepo.getAllHabits()
         }
     }
 
-    private var _selfAddedHabit = MutableStateFlow<SelfAddedHabit?>(null)
-    var selfAddedHabit = _selfAddedHabit.asStateFlow()
-    fun getSelfAddedHabit(title: String) {
+    fun updateHabit(habit: SelfAddedHabit) =
         viewModelScope.launch(Dispatchers.IO) {
-            _selfAddedHabit.value = selfAddedHabitRepo.getSelfAddedHabit(title)
+            selfAddedHabitRepo.updateHabit(habit)
+            getAllSelfAddedHabits()
         }
-    }
 
-    fun insertSelfAddedHabit(selfAddedHabit: SelfAddedHabit) {
-        viewModelScope.launch(Dispatchers.IO) {
-            selfAddedHabitRepo.insert(selfAddedHabit)
-        }
-    }
 
-    fun deleteSelfAddedHabit(selfAddedHabit: SelfAddedHabit) {
+    fun insertSelfAddedHabit(habit: SelfAddedHabit) =
         viewModelScope.launch(Dispatchers.IO) {
-            selfAddedHabitRepo.delete(selfAddedHabit)
+            selfAddedHabitRepo.insert(habit)
+            getAllSelfAddedHabits()
         }
-    }
+
+
+    fun deleteSelfAddedHabit(habit: SelfAddedHabit) =
+        viewModelScope.launch(Dispatchers.IO) {
+            selfAddedHabitRepo.delete(habit)
+        }
+
 
 }
