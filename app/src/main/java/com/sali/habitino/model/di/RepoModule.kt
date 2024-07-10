@@ -1,5 +1,7 @@
 package com.sali.habitino.model.di
 
+import com.sali.habitino.model.repo.HabitStateRepo
+import com.sali.habitino.model.repo.HabitStateRepoImpl
 import com.sali.habitino.model.repo.SelfAddedHabitRepo
 import com.sali.habitino.model.repo.SelfAddedHabitRepoImpl
 import dagger.Binds
@@ -16,4 +18,7 @@ interface RepoModule {
     @Singleton
     fun bindSelfAddedHabitRepo(selfAddedHabitRepoImpl: SelfAddedHabitRepoImpl): SelfAddedHabitRepo
 
+    @Binds
+    @Singleton
+    fun bindHabitStateRepo(habitStateRepoImpl: HabitStateRepoImpl): HabitStateRepo
 }

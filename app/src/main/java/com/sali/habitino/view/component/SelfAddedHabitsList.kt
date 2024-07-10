@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sali.habitino.viewmodel.SelfAddedHabitViewModel
+import java.time.LocalDateTime
 
 @Composable
 fun SelfAddedHabitsList() {
@@ -35,7 +36,10 @@ fun SelfAddedHabitsList() {
                 state = item.state,
                 isCompleted = item.isCompleted
             ) {
-                val updatedItem = item.copy(isCompleted = !item.isCompleted)
+                val updatedItem = item.copy(
+                    isCompleted = !item.isCompleted,
+                    lastCompletedDate = LocalDateTime.now()
+                )
                 selfAddedHabitViewModel.updateHabit(updatedItem)
             }
         }
