@@ -26,6 +26,7 @@ import com.sali.habitino.view.component.HabitTypeItem
 import com.sali.habitino.view.component.RemoteHabitsList
 import com.sali.habitino.view.component.SelfAddedHabitsList
 import com.sali.habitino.view.theme.LightBlue
+import com.sali.habitino.viewmodel.RemoteHabitViewModel
 import com.sali.habitino.viewmodel.ScoreStateViewModel
 
 @Composable

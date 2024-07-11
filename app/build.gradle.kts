@@ -58,6 +58,8 @@ composeCompiler {
 
 dependencies {
 
+    implementation(libs.firebase.firestore)
+
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)

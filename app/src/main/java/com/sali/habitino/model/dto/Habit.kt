@@ -6,7 +6,7 @@ import java.time.LocalDate
 
 @Entity
 data class Habit(
-    var id: Int,
+    var id: String,
 
     var title: String,
 
