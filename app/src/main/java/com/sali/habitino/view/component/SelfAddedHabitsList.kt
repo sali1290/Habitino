@@ -36,16 +36,17 @@ fun SelfAddedHabitsList(onCompletedClick: (Int) -> Unit) {
                 state = item.state,
                 isCompleted = item.isCompleted
             ) {
+                if (!item.isCompleted) {
+                    onCompletedClick(1)
+                } else {
+                    onCompletedClick(-1)
+                }
+
                 val updatedItem = item.copy(
                     isCompleted = !item.isCompleted,
                     lastCompletedDate = LocalDateTime.now()
                 )
 
-                if (item.isCompleted) {
-                    onCompletedClick(-1)
-                } else {
-                    onCompletedClick(1)
-                }
                 selfAddedHabitViewModel.updateHabit(updatedItem)
             }
         }
