@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -21,6 +22,7 @@ import com.sali.habitino.view.component.SelfAddedHabitsList
 @Composable
 fun MainHabitScreen() {
     var habitListEnabled by remember { mutableIntStateOf(0) }
+    var score by remember { mutableIntStateOf(0) }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -68,7 +70,9 @@ fun MainHabitScreen() {
             }
 
             2 -> {
-                SelfAddedHabitsList()
+                SelfAddedHabitsList {
+                    score += it
+                }
             }
         }
 

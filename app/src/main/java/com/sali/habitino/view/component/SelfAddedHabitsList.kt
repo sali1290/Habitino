@@ -15,7 +15,7 @@ import com.sali.habitino.viewmodel.SelfAddedHabitViewModel
 import java.time.LocalDateTime
 
 @Composable
-fun SelfAddedHabitsList() {
+fun SelfAddedHabitsList(onCompletedClick: (Int) -> Unit) {
     val selfAddedHabitViewModel: SelfAddedHabitViewModel = hiltViewModel()
     val selfAddedHabitsState by selfAddedHabitViewModel.habits.collectAsState()
 
@@ -40,6 +40,12 @@ fun SelfAddedHabitsList() {
                     isCompleted = !item.isCompleted,
                     lastCompletedDate = LocalDateTime.now()
                 )
+
+                if (item.isCompleted) {
+                    onCompletedClick(-1)
+                } else {
+                    onCompletedClick(1)
+                }
                 selfAddedHabitViewModel.updateHabit(updatedItem)
             }
         }
