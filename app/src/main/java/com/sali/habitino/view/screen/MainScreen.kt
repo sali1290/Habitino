@@ -84,7 +84,9 @@ fun MainHabitScreen() {
             text = "Your score: $score",
             fontSize = 20.sp,
             color = LightBlue,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp),
             textAlign = TextAlign.Start
         )
 
