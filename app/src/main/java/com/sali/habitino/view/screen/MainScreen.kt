@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
@@ -19,15 +21,26 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.sali.habitino.view.component.HabitTypeItem
 import com.sali.habitino.view.component.RemoteHabitsList
 import com.sali.habitino.view.component.SelfAddedHabitsList
 import com.sali.habitino.view.theme.LightBlue
+import com.sali.habitino.viewmodel.ScoreStateViewModel
 
 @Composable
 fun MainHabitScreen() {
     var habitListEnabled by remember { mutableIntStateOf(0) }
+
+    val scoreStateViewModel: ScoreStateViewModel = hiltViewModel()
+    val scoreState by scoreStateViewModel.score.collectAsState()
+    LaunchedEffect(key1 = Unit) {
+        scoreStateViewModel.getScore()
+    }
     var score by remember { mutableIntStateOf(0) }
+    LaunchedEffect(key1 = scoreState) {
+        score = scoreState
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -89,6 +102,7 @@ fun MainHabitScreen() {
             2 -> {
                 SelfAddedHabitsList {
                     score += it
+                    scoreStateViewModel.saveScore(score)
                 }
             }
         }
