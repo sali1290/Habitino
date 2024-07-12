@@ -7,7 +7,6 @@ import com.sali.habitino.model.db.HabitDao
 import com.sali.habitino.model.dto.Habit
 import com.sali.habitino.model.utils.Keys
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.tasks.await
 import java.time.LocalDateTime
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -29,6 +28,10 @@ class RemoteHabitRepoImpl @Inject constructor(
         return habitList
     }
 
+    override suspend fun updateHabit(habit: Habit) {
+        habitDao.upsert(habit)
+    }
+
     private suspend fun getAllRemoteHabits() = suspendCoroutine<List<Habit>> { continuation ->
         val habitsList = mutableListOf<Habit>()
         firestore.collection("habits").get()
@@ -44,7 +47,7 @@ class RemoteHabitRepoImpl @Inject constructor(
                         description = habitMap.getValue("description").toString(),
                         solution = habitMap.getValue("solution") as? String,
                         state = habitMap.getValue("state").toString(),
-                        isCompleted = null,
+                        isCompleted = false,
                         lastCompletedDate = null
                     )
                     habitsList.add(habit)

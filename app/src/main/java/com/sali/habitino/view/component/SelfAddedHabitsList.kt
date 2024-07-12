@@ -16,9 +16,9 @@ import java.time.LocalDateTime
 
 @Composable
 fun SelfAddedHabitsList(onCompletedClick: (Int) -> Unit) {
+
     val selfAddedHabitViewModel: SelfAddedHabitViewModel = hiltViewModel()
     val selfAddedHabitsState by selfAddedHabitViewModel.habits.collectAsState()
-
     LaunchedEffect(key1 = Unit) {
         selfAddedHabitViewModel.getAllSelfAddedHabits()
     }

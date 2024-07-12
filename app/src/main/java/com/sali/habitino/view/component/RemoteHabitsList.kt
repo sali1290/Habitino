@@ -12,9 +12,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sali.habitino.viewmodel.RemoteHabitViewModel
+import java.time.LocalDateTime
 
 @Composable
-fun RemoteHabitsList() {
+fun RemoteHabitsList(onCompletedClick: (Int) -> Unit) {
 
     val remoteHabitViewModel: RemoteHabitViewModel = hiltViewModel()
     val remoteHabitsState by remoteHabitViewModel.habits.collectAsState()
@@ -33,8 +34,20 @@ fun RemoteHabitsList() {
                 description = item.description,
                 solution = item.solution,
                 state = item.state,
-                isCompleted = item.isCompleted ?: false
-            ) {}
+                isCompleted = item.isCompleted
+            ) {
+                if (!item.isCompleted) {
+                    onCompletedClick(1)
+                } else {
+                    onCompletedClick(-1)
+                }
+                val updatedItem = item.copy(
+                    isCompleted = !item.isCompleted,
+                    lastCompletedDate = LocalDateTime.now()
+                )
+
+                remoteHabitViewModel.updateHabit(updatedItem)
+            }
         }
     }
 

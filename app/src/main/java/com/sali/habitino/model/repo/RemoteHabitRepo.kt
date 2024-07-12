@@ -6,4 +6,6 @@ interface RemoteHabitRepo {
 
     suspend fun getAllHabits(): List<Habit>
 
+    suspend fun updateHabit(habit: Habit)
+
 }

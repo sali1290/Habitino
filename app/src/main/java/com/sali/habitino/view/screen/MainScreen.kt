@@ -26,7 +26,6 @@ import com.sali.habitino.view.component.HabitTypeItem
 import com.sali.habitino.view.component.RemoteHabitsList
 import com.sali.habitino.view.component.SelfAddedHabitsList
 import com.sali.habitino.view.theme.LightBlue
-import com.sali.habitino.viewmodel.RemoteHabitViewModel
 import com.sali.habitino.viewmodel.ScoreStateViewModel
 
 @Composable
@@ -53,7 +52,7 @@ fun MainHabitScreen() {
         ) {
             HabitTypeItem(
                 modifier = Modifier.weight(0.33f),
-                text = "Bad habits",
+                text = "Common habits",
                 enabled = habitListEnabled == 0,
                 enabledColor = Color.Red
             ) {
@@ -62,20 +61,11 @@ fun MainHabitScreen() {
 
             HabitTypeItem(
                 modifier = Modifier.weight(0.33f),
-                text = "Good habits",
-                enabled = habitListEnabled == 1,
-                enabledColor = Color.Green
-            ) {
-                habitListEnabled = 1
-            }
-
-            HabitTypeItem(
-                modifier = Modifier.weight(0.33f),
                 text = "Self added",
-                enabled = habitListEnabled == 2,
+                enabled = habitListEnabled == 1,
                 enabledColor = Color.DarkGray
             ) {
-                habitListEnabled = 2
+                habitListEnabled = 1
             }
         }
 
@@ -95,14 +85,13 @@ fun MainHabitScreen() {
 
         when (habitListEnabled) {
             0 -> {
-                RemoteHabitsList()
+                RemoteHabitsList {
+                    score += it
+                    scoreStateViewModel.saveScore(score)
+                }
             }
 
             1 -> {
-                RemoteHabitsList()
-            }
-
-            2 -> {
                 SelfAddedHabitsList {
                     score += it
                     scoreStateViewModel.saveScore(score)

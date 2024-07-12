@@ -3,7 +3,6 @@ package com.sali.habitino.model.dto
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Entity
@@ -20,7 +19,7 @@ data class Habit(
     var state: String,
 
     @ColumnInfo(name = "is_completed")
-    var isCompleted: Boolean? = null,
+    var isCompleted: Boolean,
 
     @ColumnInfo(name = "last_completed_date")
     var lastCompletedDate: LocalDateTime? = null

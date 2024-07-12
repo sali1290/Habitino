@@ -21,4 +21,9 @@ class RemoteHabitViewModel @Inject constructor(private val remoteHabitRepo: Remo
     fun getAllHabits() = viewModelScope.launch(Dispatchers.IO) {
         _habits.value = remoteHabitRepo.getAllHabits()
     }
+
+    fun updateHabit(habit: Habit) = viewModelScope.launch(Dispatchers.IO) {
+        remoteHabitRepo.updateHabit(habit)
+        getAllHabits()
+    }
 }
