@@ -1,37 +1,83 @@
 package com.sali.habitino.model.repo
 
+import android.content.Context
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sali.habitino.model.db.HabitDao
 import com.sali.habitino.model.dto.Habit
-import kotlinx.coroutines.flow.flow
+import com.sali.habitino.model.utils.Keys
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
+import java.time.LocalDateTime
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
-class RemoteHabitRepoImpl @Inject constructor(private val firestore: FirebaseFirestore) :
-    RemoteHabitRepo {
-    override fun getAllRemoteHabits() = flow {
+class RemoteHabitRepoImpl @Inject constructor(
+    private val firestore: FirebaseFirestore,
+    private val habitDao: HabitDao,
+    @ApplicationContext private val context: Context
+) : RemoteHabitRepo {
+
+    override suspend fun getAllHabits(): List<Habit> {
+        val habitList = mutableListOf<Habit>()
+        habitList.addAll(getAllSavedHabit())
+        if (habitList.isEmpty() || chooseDataSource(context)) {
+            habitList.addAll(getAllRemoteHabits())
+            saveAllHabits(habitList)
+        }
+        return habitList
+    }
+
+    private suspend fun getAllRemoteHabits() = suspendCoroutine<List<Habit>> { continuation ->
         val habitsList = mutableListOf<Habit>()
         firestore.collection("habits").get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
-                    Log.d("firestore answer", "${document.data}")
-                    val habit =
+                    val habitMap =
                         document.data.getValue(
                             document.data.keys.toString().removeSurrounding("[", "]")
                         ) as HashMap<String, *>
-                    habitsList.add(
-                        Habit(
-                            id = document.id,
-                            title = document.data.keys.toString().removeSurrounding("[", "]"),
-                            description = habit.getValue("description").toString(),
-                            solution = habit.getValue("solution") as? String,
-                            state = habit.getValue("state").toString(),
-                            isCompleted = null,
-                            lastCompletedDate = null
-                        )
+                    val habit = Habit(
+                        id = document.id,
+                        title = document.data.keys.toString().removeSurrounding("[", "]"),
+                        description = habitMap.getValue("description").toString(),
+                        solution = habitMap.getValue("solution") as? String,
+                        state = habitMap.getValue("state").toString(),
+                        isCompleted = null,
+                        lastCompletedDate = null
                     )
+                    habitsList.add(habit)
                 }
-            }.await()
-        emit(habitsList)
+                saveRemoteFetchDate(context)
+                continuation.resume(habitsList)
+            }
+            .addOnFailureListener {
+                Log.d("firestore answer", it.message.toString())
+            }
+    }
+
+    private fun getAllSavedHabit(): List<Habit> {
+        return habitDao.getAll()
+    }
+
+    private fun saveAllHabits(habits: List<Habit>) {
+        habits.forEach {
+            habitDao.upsert(it)
+        }
+    }
+
+    private fun saveRemoteFetchDate(context: Context) {
+        context.getSharedPreferences(Keys.HABITINO_SHARED, Context.MODE_PRIVATE).edit()
+            .putInt(Keys.FETCH_DATE, LocalDateTime.now().dayOfYear).apply()
+    }
+
+    private fun chooseDataSource(context: Context): Boolean {
+        val fetchDate: Int =
+            context.getSharedPreferences(Keys.HABITINO_SHARED, Context.MODE_PRIVATE)
+                .getInt(Keys.FETCH_DATE, -1)
+        val currentDate = LocalDateTime.now().dayOfYear
+        // Fetch data every 30 days from firestore
+        return fetchDate == -1 || fetchDate + 30 < currentDate
     }
 }
