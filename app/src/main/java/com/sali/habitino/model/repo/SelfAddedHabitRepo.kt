@@ -4,7 +4,7 @@ import com.sali.habitino.model.dto.SelfAddedHabit
 
 interface SelfAddedHabitRepo {
 
-    suspend fun insert(habit: SelfAddedHabit)
+    suspend fun insert(title: String, description: String, solution: String, state: Boolean)
 
     suspend fun delete(habit: SelfAddedHabit)
 

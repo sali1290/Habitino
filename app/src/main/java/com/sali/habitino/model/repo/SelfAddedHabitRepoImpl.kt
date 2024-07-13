@@ -6,7 +6,21 @@ import javax.inject.Inject
 
 class SelfAddedHabitRepoImpl @Inject constructor(private val selfAddedHabitDao: SelfAddedHabitDao) :
     SelfAddedHabitRepo {
-    override suspend fun insert(habit: SelfAddedHabit) {
+    override suspend fun insert(
+        title: String,
+        description: String,
+        solution: String,
+        state: Boolean
+    ) {
+        val habit = SelfAddedHabit(
+            id = 0,
+            title = title,
+            description = description,
+            solution = solution,
+            state = if (state) "Good" else "Bad",
+            isCompleted = false,
+            lastCompletedDate = null
+        )
         selfAddedHabitDao.insert(habit)
     }
 
