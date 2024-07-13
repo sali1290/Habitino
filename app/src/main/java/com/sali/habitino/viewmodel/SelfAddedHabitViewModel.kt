@@ -45,6 +45,7 @@ class SelfAddedHabitViewModel @Inject constructor(private val selfAddedHabitRepo
     fun deleteSelfAddedHabit(habit: SelfAddedHabit) =
         viewModelScope.launch(Dispatchers.IO) {
             selfAddedHabitRepo.delete(habit)
+            getAllSelfAddedHabits()
         }
 
 

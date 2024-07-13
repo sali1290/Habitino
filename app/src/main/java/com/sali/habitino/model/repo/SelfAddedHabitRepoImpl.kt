@@ -17,7 +17,7 @@ class SelfAddedHabitRepoImpl @Inject constructor(private val selfAddedHabitDao: 
             title = title,
             description = description,
             solution = solution,
-            state = if (state) "Good" else "Bad",
+            state = if (state) "good" else "bad",
             isCompleted = false,
             lastCompletedDate = null
         )

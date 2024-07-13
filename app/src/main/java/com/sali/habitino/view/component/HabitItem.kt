@@ -1,7 +1,6 @@
 package com.sali.habitino.view.component
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -16,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -32,13 +32,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.sali.habitino.R
 
 @Composable
 fun HabitItem(
+    selfAdded: Boolean = false,
+    onDeleteClick: () -> Unit = {},
     title: String,
     description: String,
     solution: String? = null,
@@ -62,7 +62,7 @@ fun HabitItem(
                 .height(cardHeight)
                 .weight(0.15f)
                 .background(
-                    color = Color.Cyan,
+                    color = if (state == "good") Color.Green else Color.Red,
                     shape = RoundedCornerShape(topStart = 15.dp, bottomStart = 15.dp)
                 ),
             contentAlignment = Alignment.Center
@@ -109,19 +109,16 @@ fun HabitItem(
                 .height(cardHeight)
                 .weight(0.15f)
                 .background(
-                    color = Color.LightGray,
+                    color = CardDefaults.cardColors().containerColor,
                     shape = RoundedCornerShape(topEnd = 15.dp, bottomEnd = 15.dp)
                 ),
             contentAlignment = Alignment.Center
         ) {
-            Image(
-                painter = if (state == "bad")
-                    painterResource(id = R.drawable.ic_sad)
-                else
-                    painterResource(id = R.drawable.ic_happy),
-                contentDescription = "Good or bad habit",
-                modifier = Modifier.padding(10.dp)
-            )
+            if (selfAdded) {
+                IconButton(onClick = onDeleteClick) {
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete habit")
+                }
+            }
         }
 
     }

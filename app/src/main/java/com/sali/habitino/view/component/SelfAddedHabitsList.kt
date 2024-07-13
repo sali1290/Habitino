@@ -65,6 +65,8 @@ fun SelfAddedHabitsList(onCompletedClick: (Int) -> Unit) {
         ) {
             itemsIndexed(selfAddedHabitsState) { _, item ->
                 HabitItem(
+                    selfAdded = true,
+                    onDeleteClick = { selfAddedHabitViewModel.deleteSelfAddedHabit(item) },
                     title = item.title,
                     description = item.description,
                     solution = item.solution,
