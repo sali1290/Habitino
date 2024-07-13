@@ -20,8 +20,6 @@ fun HabitTypeItem(
     modifier: Modifier = Modifier,
     text: String,
     enabled: Boolean,
-    enabledColor: Color,
-    disabledColor: Color = Color.LightGray,
     onClick: () -> Unit
 ) {
     Column(
@@ -32,13 +30,13 @@ fun HabitTypeItem(
             text = text,
             fontSize = 18.sp,
             modifier = Modifier.padding(10.dp),
-            color = if (enabled) enabledColor else disabledColor
+            color = if (enabled) Color.White else Color.Gray
         )
         Spacer(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(2.dp)
-                .background(color = if (enabled) enabledColor else disabledColor)
+                .background(color = if (enabled) Color.White else Color.Gray)
         )
     }
 }

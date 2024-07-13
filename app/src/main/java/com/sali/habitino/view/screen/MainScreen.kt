@@ -17,7 +17,6 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,8 +52,7 @@ fun MainHabitScreen() {
             HabitTypeItem(
                 modifier = Modifier.weight(0.33f),
                 text = "Common habits",
-                enabled = habitListEnabled == 0,
-                enabledColor = Color.Red
+                enabled = habitListEnabled == 0
             ) {
                 habitListEnabled = 0
             }
@@ -62,8 +60,7 @@ fun MainHabitScreen() {
             HabitTypeItem(
                 modifier = Modifier.weight(0.33f),
                 text = "Self added",
-                enabled = habitListEnabled == 1,
-                enabledColor = Color.DarkGray
+                enabled = habitListEnabled == 1
             ) {
                 habitListEnabled = 1
             }
