@@ -1,5 +1,10 @@
 package com.sali.habitino.view.screen
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -78,24 +83,45 @@ fun MainHabitScreen() {
             textAlign = TextAlign.Start
         )
 
-        Spacer(modifier = Modifier.height(15.dp))
-
-        when (habitListEnabled) {
-            0 -> {
-                RemoteHabitsList {
-                    score += it
-                    scoreStateViewModel.saveScore(score)
+        AnimatedContent(
+            targetState = habitListEnabled,
+            label = "Habit lists",
+            transitionSpec = {
+                if (targetState == 0) {
+                    slideInHorizontally(
+                        animationSpec = tween(500),
+                        initialOffsetX = { fullWidth -> -fullWidth }
+                    ) togetherWith slideOutHorizontally(
+                        animationSpec = tween(500),
+                        targetOffsetX = { fullWidth -> fullWidth }
+                    )
+                } else {
+                    slideInHorizontally(
+                        animationSpec = tween(500),
+                        initialOffsetX = { fullWidth -> fullWidth }
+                    ) togetherWith slideOutHorizontally(
+                        animationSpec = tween(500),
+                        targetOffsetX = { fullWidth -> -fullWidth }
+                    )
                 }
             }
+        ) { targetState ->
+            when (targetState) {
+                0 -> {
+                    RemoteHabitsList {
+                        score += it
+                        scoreStateViewModel.saveScore(score)
+                    }
+                }
 
-            1 -> {
-                SelfAddedHabitsList {
-                    score += it
-                    scoreStateViewModel.saveScore(score)
+                1 -> {
+                    SelfAddedHabitsList {
+                        score += it
+                        scoreStateViewModel.saveScore(score)
+                    }
                 }
             }
         }
-
     }
 
 }

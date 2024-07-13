@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -23,30 +24,37 @@ fun RemoteHabitsList(onCompletedClick: (Int) -> Unit) {
         remoteHabitViewModel.getAllHabits()
     }
 
-    LazyColumn(
+    Scaffold(
         modifier = Modifier
             .fillMaxSize()
             .padding(10.dp)
-    ) {
-        itemsIndexed(remoteHabitsState) { _, item ->
-            HabitItem(
-                title = item.title,
-                description = item.description,
-                solution = item.solution,
-                state = item.state,
-                isCompleted = item.isCompleted
-            ) {
-                if (!item.isCompleted) {
-                    onCompletedClick(1)
-                } else {
-                    onCompletedClick(-1)
-                }
-                val updatedItem = item.copy(
-                    isCompleted = !item.isCompleted,
-                    lastCompletedDate = LocalDateTime.now()
-                )
+    ) { innerPadding ->
 
-                remoteHabitViewModel.updateHabit(updatedItem)
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            itemsIndexed(remoteHabitsState) { _, item ->
+                HabitItem(
+                    title = item.title,
+                    description = item.description,
+                    solution = item.solution,
+                    state = item.state,
+                    isCompleted = item.isCompleted
+                ) {
+                    if (!item.isCompleted) {
+                        onCompletedClick(1)
+                    } else {
+                        onCompletedClick(-1)
+                    }
+                    val updatedItem = item.copy(
+                        isCompleted = !item.isCompleted,
+                        lastCompletedDate = LocalDateTime.now()
+                    )
+
+                    remoteHabitViewModel.updateHabit(updatedItem)
+                }
             }
         }
     }
