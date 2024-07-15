@@ -17,8 +17,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sali.habitino.R
 import com.sali.habitino.viewmodel.SelfAddedHabitViewModel
 import java.time.LocalDateTime
 
@@ -98,6 +100,6 @@ fun AddHabitFloatingActionButton(onClick: () -> Unit) {
     FloatingActionButton(
         onClick = { onClick() },
     ) {
-        Icon(Icons.Filled.Add, "Add habit.")
+        Icon(Icons.Filled.Add, stringResource(R.string.add_habit))
     }
 }

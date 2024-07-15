@@ -22,10 +22,12 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sali.habitino.R
 import com.sali.habitino.view.component.HabitTypeItem
 import com.sali.habitino.view.component.RemoteHabitsList
 import com.sali.habitino.view.component.SelfAddedHabitsList
@@ -56,7 +58,7 @@ fun MainHabitScreen() {
         ) {
             HabitTypeItem(
                 modifier = Modifier.weight(0.33f),
-                text = "Common habits",
+                text = stringResource(R.string.common_habits),
                 enabled = habitListEnabled == 0
             ) {
                 habitListEnabled = 0
@@ -64,7 +66,7 @@ fun MainHabitScreen() {
 
             HabitTypeItem(
                 modifier = Modifier.weight(0.33f),
-                text = "Self added",
+                text = stringResource(R.string.self_added),
                 enabled = habitListEnabled == 1
             ) {
                 habitListEnabled = 1
@@ -74,7 +76,7 @@ fun MainHabitScreen() {
         Spacer(modifier = Modifier.height(15.dp))
 
         Text(
-            text = "Your score: $score",
+            text = stringResource(R.string.your_score, score),
             fontSize = 20.sp,
             color = LightBlue,
             modifier = Modifier
@@ -85,7 +87,7 @@ fun MainHabitScreen() {
 
         AnimatedContent(
             targetState = habitListEnabled,
-            label = "Habit lists",
+            label = stringResource(R.string.habits_list),
             transitionSpec = {
                 if (targetState == 0) {
                     slideInHorizontally(

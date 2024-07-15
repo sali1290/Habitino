@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -56,7 +57,7 @@ fun AddHabitDialog(
             OutlinedTextField(
                 value = title,
                 onValueChange = { title = it },
-                placeholder = { Text(text = "Title*") }
+                placeholder = { Text(text = stringResource(R.string.title)) }
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -64,7 +65,7 @@ fun AddHabitDialog(
             OutlinedTextField(
                 value = description,
                 onValueChange = { description = it },
-                placeholder = { Text(text = "Description*") }
+                placeholder = { Text(text = stringResource(R.string.description)) }
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -72,7 +73,7 @@ fun AddHabitDialog(
             OutlinedTextField(
                 value = solution,
                 onValueChange = { solution = it },
-                placeholder = { Text(text = "Solution") }
+                placeholder = { Text(text = stringResource(R.string.solution)) }
             )
 
             Spacer(modifier = Modifier.height(20.dp))
@@ -98,10 +99,13 @@ fun AddHabitDialog(
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_happy),
-                        contentDescription = "Good habit",
+                        contentDescription = stringResource(R.string.good_habit),
                         modifier = Modifier.weight(0.8f)
                     )
-                    Text(text = "Good habit", modifier = Modifier.weight(0.2f))
+                    Text(
+                        text = stringResource(R.string.good_habit),
+                        modifier = Modifier.weight(0.2f)
+                    )
                 }
 
                 Column(
@@ -118,10 +122,13 @@ fun AddHabitDialog(
                 {
                     Image(
                         painter = painterResource(id = R.drawable.ic_sad),
-                        contentDescription = "Bad habit",
+                        contentDescription = stringResource(R.string.bad_habit),
                         modifier = Modifier.weight(0.8f)
                     )
-                    Text(text = "Bad habit", modifier = Modifier.weight(0.2f))
+                    Text(
+                        text = stringResource(R.string.bad_habit),
+                        modifier = Modifier.weight(0.2f)
+                    )
                 }
 
             }
@@ -133,12 +140,12 @@ fun AddHabitDialog(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Text(
-                    text = "Decline",
+                    text = stringResource(R.string.decline),
                     fontSize = 20.sp,
                     color = Color.Red,
                     modifier = Modifier.clickable { onDismissRequest() })
                 Text(
-                    text = "Confirm",
+                    text = stringResource(R.string.confirm),
                     fontSize = 20.sp,
                     color = LightBlue,
                     modifier = Modifier.clickable {

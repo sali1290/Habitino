@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Habitino</string>
+    <string name="habits_list">Habits list</string>
+    <string name="your_score">Your score: %1$s</string>
+    <string name="is_it_completed_or_not">Is it completed or not</string>
+    <string name="delete_habit">Delete habit</string>
+    <string name="add_habit">Add habit.</string>
+    <string name="title">Title*</string>
+    <string name="description">Description*</string>
+    <string name="solution">Solution</string>
+    <string name="good_habit">Good habit</string>
+    <string name="bad_habit">Bad habit</string>
+    <string name="decline">Decline</string>
+    <string name="confirm">Confirm</string>
+    <string name="self_added">Self added</string>
+    <string name="common_habits">Common habits</string>
 </resources>

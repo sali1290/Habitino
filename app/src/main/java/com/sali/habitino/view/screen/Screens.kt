@@ -2,6 +2,10 @@ package com.sali.habitino.view.screen
 
 sealed class Screens(val route: String) {
 
-    data object MainHabitScreen : Screens(route = "MainHabitScreen")
+    companion object {
+        const val ROUTE_MAIN_HABIT_SCREEN = "MainHabitScreen"
+    }
+
+    data object MainHabitScreen : Screens(route = ROUTE_MAIN_HABIT_SCREEN)
 
 }

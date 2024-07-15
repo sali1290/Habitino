@@ -32,8 +32,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.sali.habitino.R
 
 @Composable
 fun HabitItem(
@@ -73,7 +75,7 @@ fun HabitItem(
                         Icons.Default.Check
                     else
                         Icons.Default.Clear,
-                    contentDescription = "Is it completed or not"
+                    contentDescription = stringResource(R.string.is_it_completed_or_not)
                 )
             }
         }
@@ -116,7 +118,7 @@ fun HabitItem(
         ) {
             if (selfAdded) {
                 IconButton(onClick = onDeleteClick) {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete habit")
+                    Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete_habit))
                 }
             }
         }
