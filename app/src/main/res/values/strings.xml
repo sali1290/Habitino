@@ -10,7 +10,7 @@
     <string name="solution">Solution</string>
     <string name="good_habit">Good habit</string>
     <string name="bad_habit">Bad habit</string>
-    <string name="decline">Decline</string>
+    <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
     <string name="self_added">Self added</string>
     <string name="common_habits">Common habits</string>

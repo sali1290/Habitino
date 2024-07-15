@@ -140,7 +140,7 @@ fun AddHabitDialog(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Text(
-                    text = stringResource(R.string.decline),
+                    text = stringResource(R.string.cancel),
                     fontSize = 20.sp,
                     color = Color.Red,
                     modifier = Modifier.clickable { onDismissRequest() })
