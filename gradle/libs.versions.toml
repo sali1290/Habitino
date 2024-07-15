@@ -1,5 +1,5 @@
 [versions]
-agp = "8.5.0"
+agp = "8.5.1"
 kotlin = "2.0.0"
 coreKtx = "1.13.1"
 junit = "4.13.2"
@@ -13,7 +13,7 @@ ksp = "2.0.0-1.0.22"
 navigationCompose = "2.7.7"
 hiltNavigationCompose = "1.2.0"
 googleService = "4.4.2"
-firebaseBom = "33.1.1"
+firebaseBom = "33.1.2"
 room = "2.6.1"
 
 [libraries]
@@ -41,6 +41,7 @@ androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-com
 # Firebase services
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-firestore = { module = "com.google.firebase:firebase-firestore" }
+com-google-firebase-firebase-appcheck-playintegrity2 = { module = "com.google.firebase:firebase-appcheck-playintegrity" }
 
 # Room
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }

@@ -59,6 +59,7 @@ composeCompiler {
 dependencies {
 
     implementation(libs.firebase.firestore)
+    implementation(libs.com.google.firebase.firebase.appcheck.playintegrity2)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
