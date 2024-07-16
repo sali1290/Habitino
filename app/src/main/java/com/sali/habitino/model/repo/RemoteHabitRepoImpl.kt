@@ -55,8 +55,9 @@ class RemoteHabitRepoImpl @Inject constructor(
                 saveRemoteFetchDate(context)
                 continuation.resume(habitsList)
             }
-            .addOnFailureListener {
-                Log.d("firestore answer", it.message.toString())
+            .addOnFailureListener { exception ->
+                Log.d("firestore answer", exception.message.toString())
+                throw exception
             }
     }
 
