@@ -1,5 +1,6 @@
 package com.sali.habitino.view.component
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -23,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -41,7 +43,8 @@ fun AddHabitDialog(
     var description by remember { mutableStateOf("") }
     var solution by remember { mutableStateOf("") }
     var state by remember { mutableStateOf(true) }
-
+    val context = LocalContext.current
+    var areFieldsEmpty by remember { mutableStateOf(false) }
     Dialog(onDismissRequest = onDismissRequest) {
 
         Column(
@@ -57,7 +60,8 @@ fun AddHabitDialog(
             OutlinedTextField(
                 value = title,
                 onValueChange = { title = it },
-                placeholder = { Text(text = stringResource(R.string.title)) }
+                placeholder = { Text(text = stringResource(R.string.title)) },
+                isError = areFieldsEmpty
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -65,7 +69,8 @@ fun AddHabitDialog(
             OutlinedTextField(
                 value = description,
                 onValueChange = { description = it },
-                placeholder = { Text(text = stringResource(R.string.description)) }
+                placeholder = { Text(text = stringResource(R.string.description)) },
+                isError = areFieldsEmpty
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -149,13 +154,22 @@ fun AddHabitDialog(
                     fontSize = 20.sp,
                     color = LightBlue,
                     modifier = Modifier.clickable {
-                        if (title.isNotEmpty() && description.isNotEmpty())
+                        if (title.isNotEmpty() && description.isNotEmpty()) {
                             onConfirmRequest(
                                 title,
                                 description,
                                 solution,
                                 state
                             )
+                        } else {
+                            areFieldsEmpty = true
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.please_fill_all_fields),
+                                Toast.LENGTH_SHORT
+                            )
+                                .show()
+                        }
                     })
             }
         }
