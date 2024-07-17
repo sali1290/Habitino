@@ -98,8 +98,10 @@ fun HabitItem(
                         Spacer(modifier = Modifier.height(25.dp))
                         Text(text = description, fontSize = 16.sp)
                         Spacer(modifier = Modifier.height(25.dp))
-                        solution?.let {
-                            Text(text = solution, fontSize = 14.sp)
+                        if (!solution.isNullOrEmpty()) {
+                            Text(text = "Possible solution:", fontSize = 16.sp)
+                            Spacer(modifier = Modifier.height(5.dp))
+                            Text(text = solution, fontSize = 16.sp)
                         }
                     }
                 }
@@ -118,7 +120,10 @@ fun HabitItem(
         ) {
             if (selfAdded) {
                 IconButton(onClick = onDeleteClick) {
-                    Icon(imageVector = Icons.Default.Delete, contentDescription = stringResource(R.string.delete_habit))
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = stringResource(R.string.delete_habit)
+                    )
                 }
             }
         }
