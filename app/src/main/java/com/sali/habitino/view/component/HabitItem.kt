@@ -55,7 +55,7 @@ fun HabitItem(
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(min = 80.dp)
-            .padding(vertical = 20.dp),
+            .padding(bottom = 20.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
@@ -64,7 +64,7 @@ fun HabitItem(
                 .height(cardHeight)
                 .weight(0.15f)
                 .background(
-                    color = if (state == "good") Color.Green else Color.Red,
+                    color = if (state == stringResource(R.string.good)) Color.Green else Color.Red,
                     shape = RoundedCornerShape(topStart = 15.dp, bottomStart = 15.dp)
                 ),
             contentAlignment = Alignment.Center
@@ -99,7 +99,7 @@ fun HabitItem(
                         Text(text = description, fontSize = 16.sp)
                         Spacer(modifier = Modifier.height(25.dp))
                         if (!solution.isNullOrEmpty()) {
-                            Text(text = "Possible solution:", fontSize = 16.sp)
+                            Text(text = stringResource(R.string.possible_solution), fontSize = 16.sp)
                             Spacer(modifier = Modifier.height(5.dp))
                             Text(text = solution, fontSize = 16.sp)
                         }

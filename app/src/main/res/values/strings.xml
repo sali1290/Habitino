@@ -16,4 +16,7 @@
     <string name="common_habits">Common habits</string>
     <string name="try_again">Try again</string>
     <string name="please_fill_all_fields">Please fill all fields</string>
+    <string name="possible_solution">Possible solution:</string>
+    <string name="good">good</string>
+    <string name="delete_all_tags">Delete all tags</string>
 </resources>

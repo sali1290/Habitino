@@ -38,46 +38,44 @@ fun RemoteHabitsList(onCompletedClick: (Int) -> Unit) {
     Scaffold(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)
+            .padding(horizontal = 10.dp)
     ) { innerPadding ->
+        Box(modifier = Modifier.padding(innerPadding)) {
+            when {
+                remoteHabitsState.loading -> {
+                    ProgressBar()
+                }
 
-        when {
-            remoteHabitsState.loading -> {
-                ProgressBar()
-            }
+                remoteHabitsState.result.isNotEmpty() -> {
+                    LazyColumn(modifier = Modifier.fillMaxSize()) {
+                        item { TagSelector() }
+                        itemsIndexed(remoteHabitsState.result) { _, item ->
+                            HabitItem(
+                                title = item.title,
+                                description = item.description,
+                                solution = item.solution,
+                                state = item.state,
+                                isCompleted = item.isCompleted
+                            ) {
+                                if (!item.isCompleted) {
+                                    onCompletedClick(1)
+                                } else {
+                                    onCompletedClick(-1)
+                                }
+                                val updatedItem = item.copy(
+                                    isCompleted = !item.isCompleted,
+                                    lastCompletedDate = LocalDateTime.now()
+                                )
 
-            remoteHabitsState.result.isNotEmpty() -> {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding)
-                ) {
-                    itemsIndexed(remoteHabitsState.result) { _, item ->
-                        HabitItem(
-                            title = item.title,
-                            description = item.description,
-                            solution = item.solution,
-                            state = item.state,
-                            isCompleted = item.isCompleted
-                        ) {
-                            if (!item.isCompleted) {
-                                onCompletedClick(1)
-                            } else {
-                                onCompletedClick(-1)
+                                remoteHabitViewModel.updateHabit(updatedItem)
                             }
-                            val updatedItem = item.copy(
-                                isCompleted = !item.isCompleted,
-                                lastCompletedDate = LocalDateTime.now()
-                            )
-
-                            remoteHabitViewModel.updateHabit(updatedItem)
                         }
                     }
                 }
-            }
 
-            !remoteHabitsState.error.isNullOrEmpty() -> {
-                ErrorMessage(message = remoteHabitsState.error!!) { remoteHabitViewModel.getAllHabits() }
+                !remoteHabitsState.error.isNullOrEmpty() -> {
+                    ErrorMessage(message = remoteHabitsState.error!!) { remoteHabitViewModel.getAllHabits() }
+                }
             }
         }
 
