@@ -19,4 +19,5 @@
     <string name="possible_solution">Possible solution:</string>
     <string name="good">good</string>
     <string name="delete_all_tags">Delete all tags</string>
+    <string name="search_by_tags">Search by tags</string>
 </resources>

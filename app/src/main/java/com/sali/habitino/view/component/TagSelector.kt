@@ -5,6 +5,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandHorizontally
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -21,7 +22,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -34,9 +34,10 @@ import androidx.compose.ui.unit.dp
 import com.sali.habitino.R
 
 @Composable
-fun TagSelector(tagsList: SnapshotStateList<String> = mutableStateListOf("")) {
+fun TagSelector(tagsList: SnapshotStateList<String>) {
 
     var tagsIsEnabled by remember { mutableStateOf(false) }
+    val dropDownMenuExpanded = remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -52,7 +53,12 @@ fun TagSelector(tagsList: SnapshotStateList<String> = mutableStateListOf("")) {
                 ),
             contentAlignment = Alignment.CenterStart
         ) {
-            IconButton(onClick = { tagsIsEnabled = true }) {
+            IconButton(onClick = {
+                if (tagsIsEnabled)
+                    dropDownMenuExpanded.value = !dropDownMenuExpanded.value
+                else
+                    tagsIsEnabled = true
+            }) {
                 Icon(imageVector = Icons.Default.Search, contentDescription = "Search by tag")
             }
         }
@@ -71,12 +77,26 @@ fun TagSelector(tagsList: SnapshotStateList<String> = mutableStateListOf("")) {
                     )
                 ) {
                     Text(
-                        text = tagsList.toList().toString()
+                        text = if (tagsList.isEmpty()) stringResource(R.string.search_by_tags)
+                        else tagsList.toList()
+                            .toString()
                             .substring(1, tagsList.toList().toString().length - 1),
                         modifier = Modifier
                             .weight(0.85f)
                             .horizontalScroll(rememberScrollState())
+                            .clickable { dropDownMenuExpanded.value = !dropDownMenuExpanded.value }
                     )
+
+                    MultiChoiceDropDownMenu(
+                        expanded = dropDownMenuExpanded,
+                        value = tagsList.toList().toString(),
+                    ) { item, _ ->
+                        if (tagsList.contains(item))
+                            tagsList.remove(item)
+                        else
+                            tagsList.add(item)
+                    }
+
                     Box(
                         modifier = Modifier
                             .weight(0.15f)
@@ -86,7 +106,10 @@ fun TagSelector(tagsList: SnapshotStateList<String> = mutableStateListOf("")) {
                             ),
                         contentAlignment = Alignment.Center
                     ) {
-                        IconButton(onClick = { tagsIsEnabled = false }) {
+                        IconButton(onClick = {
+                            tagsList.clear()
+                            tagsIsEnabled = false
+                        }) {
                             Icon(
                                 imageVector = Icons.Default.Clear,
                                 contentDescription = stringResource(R.string.delete_all_tags)
