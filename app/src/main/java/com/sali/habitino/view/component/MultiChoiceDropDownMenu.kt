@@ -19,10 +19,8 @@ fun MultiChoiceDropDownMenu(
     expanded: MutableState<Boolean>,
     value: String = "",
     listItems: List<String> = listOf(
-        "123",
-        "health",
-        "mental",
-        "physical"
+        "foods and drinks",
+        "productivity",
     ),
     onMenuItemClick: (String, Int) -> Unit = { _, _ -> }
 ) {

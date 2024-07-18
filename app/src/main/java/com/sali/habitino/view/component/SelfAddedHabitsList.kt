@@ -40,9 +40,13 @@ fun SelfAddedHabitsList(onCompletedClick: (Int) -> Unit) {
             onDismissRequest = {
                 showAddHabitDialog = false
             },
-            onConfirmRequest = { title, description, solution, state ->
+            onConfirmRequest = { title, description, solution, state, tags ->
                 selfAddedHabitViewModel.insertSelfAddedHabit(
-                    title = title, description = description, solution = solution, state = state
+                    title = title,
+                    description = description,
+                    solution = solution,
+                    state = state,
+                    tags = tags
                 )
                 showAddHabitDialog = false
             }

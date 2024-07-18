@@ -18,6 +18,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -36,13 +37,14 @@ import com.sali.habitino.view.theme.LightBlue
 @Composable
 fun AddHabitDialog(
     onDismissRequest: () -> Unit,
-    onConfirmRequest: (String, String, String, Boolean) -> Unit
+    onConfirmRequest: (String, String, String, Boolean, List<String>) -> Unit
 ) {
 
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var solution by remember { mutableStateOf("") }
     var state by remember { mutableStateOf(true) }
+    val tags = remember { mutableStateListOf<String>() }
     val context = LocalContext.current
     var areFieldsEmpty by remember { mutableStateOf(false) }
     Dialog(onDismissRequest = onDismissRequest) {
@@ -159,7 +161,8 @@ fun AddHabitDialog(
                                 title,
                                 description,
                                 solution,
-                                state
+                                state,
+                                tags
                             )
                         } else {
                             areFieldsEmpty = true

@@ -4,7 +4,13 @@ import com.sali.habitino.model.dto.SelfAddedHabit
 
 interface SelfAddedHabitRepo {
 
-    suspend fun insert(title: String, description: String, solution: String, state: Boolean)
+    suspend fun insert(
+        title: String,
+        description: String,
+        solution: String,
+        state: Boolean,
+        tags: List<String>
+    )
 
     suspend fun delete(habit: SelfAddedHabit)
 

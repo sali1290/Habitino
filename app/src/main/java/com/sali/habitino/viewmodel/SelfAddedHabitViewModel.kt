@@ -30,13 +30,20 @@ class SelfAddedHabitViewModel @Inject constructor(private val selfAddedHabitRepo
         }
 
 
-    fun insertSelfAddedHabit(title: String, description: String, solution: String, state: Boolean) =
+    fun insertSelfAddedHabit(
+        title: String,
+        description: String,
+        solution: String,
+        state: Boolean,
+        tags: List<String>
+    ) =
         viewModelScope.launch(Dispatchers.IO) {
             selfAddedHabitRepo.insert(
                 title = title,
                 description = description,
                 solution = solution,
-                state = state
+                state = state,
+                tags = tags
             )
             getAllSelfAddedHabits()
         }

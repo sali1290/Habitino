@@ -2,6 +2,7 @@ package com.sali.habitino.model.repo
 
 import com.sali.habitino.model.db.SelfAddedHabitDao
 import com.sali.habitino.model.dto.SelfAddedHabit
+import com.sali.habitino.model.dto.Tags
 import javax.inject.Inject
 
 class SelfAddedHabitRepoImpl @Inject constructor(private val selfAddedHabitDao: SelfAddedHabitDao) :
@@ -10,7 +11,8 @@ class SelfAddedHabitRepoImpl @Inject constructor(private val selfAddedHabitDao: 
         title: String,
         description: String,
         solution: String,
-        state: Boolean
+        state: Boolean,
+        tags: List<String>
     ) {
         val habit = SelfAddedHabit(
             id = 0,
@@ -18,6 +20,7 @@ class SelfAddedHabitRepoImpl @Inject constructor(private val selfAddedHabitDao: 
             description = description,
             solution = solution,
             state = if (state) "good" else "bad",
+            tags = Tags(tags),
             isCompleted = false,
             lastCompletedDate = null
         )

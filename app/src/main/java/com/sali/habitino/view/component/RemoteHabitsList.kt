@@ -53,25 +53,26 @@ fun RemoteHabitsList(onCompletedClick: (Int) -> Unit) {
                     LazyColumn(modifier = Modifier.fillMaxSize()) {
                         item { TagSelector(tagsList = tagsList) }
                         itemsIndexed(remoteHabitsState.result) { _, item ->
-                            HabitItem(
-                                title = item.title,
-                                description = item.description,
-                                solution = item.solution,
-                                state = item.state,
-                                isCompleted = item.isCompleted
-                            ) {
-                                if (!item.isCompleted) {
-                                    onCompletedClick(1)
-                                } else {
-                                    onCompletedClick(-1)
-                                }
-                                val updatedItem = item.copy(
-                                    isCompleted = !item.isCompleted,
-                                    lastCompletedDate = LocalDateTime.now()
-                                )
+                            if (item.tags.names.containsAll(tagsList))
+                                HabitItem(
+                                    title = item.title,
+                                    description = item.description,
+                                    solution = item.solution,
+                                    state = item.state,
+                                    isCompleted = item.isCompleted
+                                ) {
+                                    if (!item.isCompleted) {
+                                        onCompletedClick(1)
+                                    } else {
+                                        onCompletedClick(-1)
+                                    }
+                                    val updatedItem = item.copy(
+                                        isCompleted = !item.isCompleted,
+                                        lastCompletedDate = LocalDateTime.now()
+                                    )
 
-                                remoteHabitViewModel.updateHabit(updatedItem)
-                            }
+                                    remoteHabitViewModel.updateHabit(updatedItem)
+                                }
                         }
                     }
                 }

@@ -18,6 +18,8 @@ data class Habit(
 
     var state: String,
 
+    var tags: Tags,
+
     @ColumnInfo(name = "is_completed")
     var isCompleted: Boolean,
 

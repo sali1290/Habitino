@@ -5,6 +5,7 @@ import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sali.habitino.model.db.HabitDao
 import com.sali.habitino.model.dto.Habit
+import com.sali.habitino.model.dto.Tags
 import com.sali.habitino.model.utils.Keys
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.time.LocalDateTime
@@ -12,6 +13,7 @@ import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
+@Suppress("UNCHECKED_CAST")
 class RemoteHabitRepoImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val habitDao: HabitDao,
@@ -47,6 +49,7 @@ class RemoteHabitRepoImpl @Inject constructor(
                         description = habitMap.getValue("description").toString(),
                         solution = habitMap.getValue("solution") as? String,
                         state = habitMap.getValue("state").toString(),
+                        tags = Tags(habitMap.getValue("tags") as List<String>),
                         isCompleted = false,
                         lastCompletedDate = null
                     )

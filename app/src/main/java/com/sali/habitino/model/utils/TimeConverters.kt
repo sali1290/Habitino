@@ -3,7 +3,7 @@ package com.sali.habitino.model.utils
 import androidx.room.TypeConverter
 import java.time.LocalDateTime
 
-class Converters {
+class TimeConverters {
     @TypeConverter
     fun fromTimestamp(value: String?): LocalDateTime? {
         return value?.let { LocalDateTime.parse(it) }
