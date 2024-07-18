@@ -8,9 +8,11 @@ import com.sali.habitino.model.dto.Habit
 import com.sali.habitino.model.dto.Tags
 import com.sali.habitino.model.utils.Keys
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.io.IOException
 import java.time.LocalDateTime
 import javax.inject.Inject
 import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 @Suppress("UNCHECKED_CAST")
@@ -56,7 +58,15 @@ class RemoteHabitRepoImpl @Inject constructor(
                     habitsList.add(habit)
                 }
                 saveRemoteFetchDate(context)
-                continuation.resume(habitsList)
+            }
+            .addOnCompleteListener {
+                val exception = IOException("Connection error, please try again")
+                if (!it.isSuccessful) {
+                    Log.d("firestore answer", "Connection error, please try again")
+                    continuation.resumeWithException(exception)
+                } else {
+                    continuation.resume(habitsList)
+                }
             }
             .addOnFailureListener { exception ->
                 Log.d("firestore answer", exception.message.toString())
