@@ -1,20 +1,16 @@
 package com.sali.habitino.model.repo
 
-import android.content.Context
-import com.sali.habitino.model.utils.Keys
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.sali.habitino.model.utils.SharedPrefUtils
 import javax.inject.Inject
 
 class ScoreRepoImpl @Inject constructor(
-    @ApplicationContext private val context: Context
+    private val sharedPrefUtils: SharedPrefUtils
 ) : ScoreRepo {
     override fun saveScore(score: Int) {
-        context.getSharedPreferences(Keys.HABITINO_SHARED, Context.MODE_PRIVATE)
-            .edit().putInt(Keys.SCORE, score).apply()
+        sharedPrefUtils.saveScore(score)
     }
 
     override fun getScore(): Int {
-        return context.getSharedPreferences(Keys.HABITINO_SHARED, Context.MODE_PRIVATE)
-            .getInt(Keys.SCORE, 0)
+        return sharedPrefUtils.getScore()
     }
 }

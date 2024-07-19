@@ -79,7 +79,7 @@ fun RemoteHabitsList(onCompletedClick: (Int) -> Unit) {
 
                 !remoteHabitsState.error.isNullOrEmpty() || remoteHabitsState.result.isEmpty() -> {
                     if (remoteHabitsState.result.isEmpty()) {
-                        ErrorMessage(message = "Connection error, please try again") {
+                        ErrorMessage(message = stringResource(R.string.connection_error_please_try_again)) {
                             remoteHabitViewModel.getAllHabits()
                         }
                     } else {

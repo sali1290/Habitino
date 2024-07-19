@@ -3,10 +3,14 @@ package com.sali.habitino.model.repo
 import android.content.Context
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
+import com.sali.habitino.R
 import com.sali.habitino.model.db.HabitDao
 import com.sali.habitino.model.dto.Habit
 import com.sali.habitino.model.dto.Tags
+import com.sali.habitino.model.utils.DataSource
 import com.sali.habitino.model.utils.Keys
+import com.sali.habitino.model.utils.SharedPrefUtils
+import com.sali.habitino.model.utils.TagKeys
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.IOException
 import java.time.LocalDateTime
@@ -19,15 +23,21 @@ import kotlin.coroutines.suspendCoroutine
 class RemoteHabitRepoImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val habitDao: HabitDao,
+    private val sharedPrefUtils: SharedPrefUtils,
     @ApplicationContext private val context: Context
 ) : RemoteHabitRepo {
 
     override suspend fun getAllHabits(): List<Habit> {
         val habitList = mutableListOf<Habit>()
-        habitList.addAll(getAllSavedHabit())
-        if (habitList.isEmpty() || chooseDataSource(context)) {
-            habitList.addAll(getAllRemoteHabits())
-            saveAllHabits(habitList)
+        when (chooseDataSource()) {
+
+            DataSource.Remote -> {
+                habitList.addAll(fetchRemoteHabits())
+                saveHabitsToLocalDataSource(habitList)
+            }
+
+            DataSource.Local -> habitList.addAll(fetchLocalHabit())
+
         }
         return habitList
     }
@@ -36,10 +46,11 @@ class RemoteHabitRepoImpl @Inject constructor(
         habitDao.upsert(habit)
     }
 
-    private suspend fun getAllRemoteHabits() = suspendCoroutine<List<Habit>> { continuation ->
+    private suspend fun fetchRemoteHabits() = suspendCoroutine<List<Habit>> { continuation ->
         val habitsList = mutableListOf<Habit>()
-        firestore.collection("habits").get()
+        firestore.collection(Keys.HABIT_COLLECTION).get()
             .addOnSuccessListener { documents ->
+                Log.d(TagKeys.FIRESTORE_ANSWER, documents.toString())
                 for (document in documents) {
                     val habitMap =
                         document.data.getValue(
@@ -48,53 +59,54 @@ class RemoteHabitRepoImpl @Inject constructor(
                     val habit = Habit(
                         id = document.id,
                         title = document.data.keys.toString().removeSurrounding("[", "]"),
-                        description = habitMap.getValue("description").toString(),
-                        solution = habitMap.getValue("solution") as? String,
-                        state = habitMap.getValue("state").toString(),
-                        tags = Tags(habitMap.getValue("tags") as List<String>),
+                        description = habitMap.getValue(Keys.HABIT_DESCRIPTION).toString(),
+                        solution = habitMap.getValue(Keys.HABIT_SOLUTION) as? String,
+                        state = habitMap.getValue(Keys.HABIT_STATE).toString(),
+                        tags = Tags(habitMap.getValue(Keys.HABIT_TAGS) as List<String>),
                         isCompleted = false,
                         lastCompletedDate = null
                     )
                     habitsList.add(habit)
                 }
-                saveRemoteFetchDate(context)
+                sharedPrefUtils.saveHabitsFetchDate()
             }
             .addOnCompleteListener {
-                val exception = IOException("Connection error, please try again")
+
                 if (!it.isSuccessful) {
-                    Log.d("firestore answer", "Connection error, please try again")
+                    Log.d(
+                        TagKeys.FIRESTORE_ANSWER,
+                        context.getString(R.string.connection_error_please_try_again)
+                    )
+                    val exception =
+                        IOException(context.getString(R.string.connection_error_please_try_again))
                     continuation.resumeWithException(exception)
                 } else {
                     continuation.resume(habitsList)
                 }
             }
             .addOnFailureListener { exception ->
-                Log.d("firestore answer", exception.message.toString())
+                Log.d(TagKeys.FIRESTORE_ANSWER, exception.message.toString())
                 throw exception
             }
     }
 
-    private fun getAllSavedHabit(): List<Habit> {
+    private fun fetchLocalHabit(): List<Habit> {
         return habitDao.getAll()
     }
 
-    private fun saveAllHabits(habits: List<Habit>) {
+    private fun saveHabitsToLocalDataSource(habits: List<Habit>) {
         habits.forEach {
             habitDao.upsert(it)
         }
     }
 
-    private fun saveRemoteFetchDate(context: Context) {
-        context.getSharedPreferences(Keys.HABITINO_SHARED, Context.MODE_PRIVATE).edit()
-            .putInt(Keys.FETCH_DATE, LocalDateTime.now().dayOfYear).apply()
-    }
-
-    private fun chooseDataSource(context: Context): Boolean {
-        val fetchDate: Int =
-            context.getSharedPreferences(Keys.HABITINO_SHARED, Context.MODE_PRIVATE)
-                .getInt(Keys.FETCH_DATE, -1)
+    private fun chooseDataSource(): DataSource {
+        val fetchDate: Int = sharedPrefUtils.getHabitsFetchDate()
         val currentDate = LocalDateTime.now().dayOfYear
         // Fetch data every 30 days from firestore
-        return fetchDate == -1 || fetchDate + 30 < currentDate
+        return if (fetchDate == -1 || fetchDate + 30 < currentDate)
+            DataSource.Remote
+        else
+            DataSource.Local
     }
 }
