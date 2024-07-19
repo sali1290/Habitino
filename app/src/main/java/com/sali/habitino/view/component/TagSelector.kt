@@ -59,7 +59,7 @@ fun TagSelector(tagsList: SnapshotStateList<String>) {
                 else
                     tagsIsEnabled = true
             }) {
-                Icon(imageVector = Icons.Default.Search, contentDescription = "Search by tag")
+                Icon(imageVector = Icons.Default.Search, contentDescription = stringResource(R.string.search_by_tag))
             }
         }
 
