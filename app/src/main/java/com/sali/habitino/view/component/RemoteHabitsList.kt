@@ -59,6 +59,7 @@ fun RemoteHabitsList(onCompletedClick: (Int) -> Unit) {
                                     description = item.description,
                                     solution = item.solution,
                                     state = item.state,
+                                    tags = item.tags.names,
                                     isCompleted = item.isCompleted
                                 ) {
                                     if (!item.isCompleted) {

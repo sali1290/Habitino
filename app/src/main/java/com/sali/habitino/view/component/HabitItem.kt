@@ -45,6 +45,7 @@ fun HabitItem(
     description: String,
     solution: String? = null,
     state: String,
+    tags: List<String>,
     isCompleted: Boolean,
     onCompleteClick: () -> Unit,
 ) {
@@ -99,9 +100,24 @@ fun HabitItem(
                         Text(text = description, fontSize = 16.sp)
                         Spacer(modifier = Modifier.height(25.dp))
                         if (!solution.isNullOrEmpty()) {
-                            Text(text = stringResource(R.string.possible_solution), fontSize = 16.sp)
+                            Text(
+                                text = stringResource(R.string.possible_solution),
+                                fontSize = 16.sp
+                            )
                             Spacer(modifier = Modifier.height(5.dp))
                             Text(text = solution, fontSize = 16.sp)
+                            Spacer(modifier = Modifier.height(25.dp))
+                        }
+                        if (tags.isNotEmpty()) {
+                            Text(
+                                text = "Tags",
+                                fontSize = 16.sp
+                            )
+                            Spacer(modifier = Modifier.height(5.dp))
+                            Text(
+                                text = tags.toString().removeSurrounding("[", "]"),
+                                fontSize = 16.sp
+                            )
                         }
                     }
                 }

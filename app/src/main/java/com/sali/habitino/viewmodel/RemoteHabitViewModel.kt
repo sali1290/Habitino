@@ -18,7 +18,7 @@ class RemoteHabitViewModel @Inject constructor(private val remoteHabitRepo: Remo
     ViewModel() {
 
     private val _habits = MutableStateFlow<BackgroundTaskResult<List<Habit>>>(
-        BackgroundTaskResult(result = emptyList())
+        BackgroundTaskResult(result = emptyList(), loading = true)
     )
     var habits = _habits.asStateFlow()
     fun getAllHabits() = updateInBackground(flow = _habits) {
