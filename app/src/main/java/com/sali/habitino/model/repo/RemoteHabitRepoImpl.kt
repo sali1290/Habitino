@@ -29,15 +29,13 @@ class RemoteHabitRepoImpl @Inject constructor(
 
     override suspend fun getAllHabits(): List<Habit> {
         val habitList = mutableListOf<Habit>()
-        when (chooseDataSource()) {
-
-            DataSource.Remote -> {
-                habitList.addAll(fetchRemoteHabits())
-                saveHabitsToLocalDataSource(habitList)
+        habitList.addAll(fetchLocalHabit())
+        if (habitList.isEmpty() || chooseDataSource() == DataSource.Remote) {
+            habitList.apply {
+                clear()
+                addAll(fetchRemoteHabits())
             }
-
-            DataSource.Local -> habitList.addAll(fetchLocalHabit())
-
+            saveHabitsToLocalDataSource(habitList)
         }
         return habitList
     }
@@ -50,8 +48,8 @@ class RemoteHabitRepoImpl @Inject constructor(
         val habitsList = mutableListOf<Habit>()
         firestore.collection(Keys.HABIT_COLLECTION).get()
             .addOnSuccessListener { documents ->
-                Log.d(TagKeys.FIRESTORE_ANSWER, documents.toString())
                 for (document in documents) {
+                    Log.d(TagKeys.FIRESTORE_ANSWER, document.data.toString())
                     val habitMap =
                         document.data.getValue(
                             document.data.keys.toString().removeSurrounding("[", "]")
