@@ -7,6 +7,7 @@ import com.sali.habitino.model.repo.SelfAddedHabitRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,7 +17,9 @@ class SelfAddedHabitViewModel @Inject constructor(private val selfAddedHabitRepo
     ViewModel() {
 
     private var _habits = MutableStateFlow<List<SelfAddedHabit>>(emptyList())
-    var habits = _habits.asStateFlow()
+    val habits: StateFlow<List<SelfAddedHabit>>
+        get() = _habits.asStateFlow()
+
     fun getAllSelfAddedHabits() {
         viewModelScope.launch(Dispatchers.IO) {
             _habits.value = selfAddedHabitRepo.getAllHabits()
