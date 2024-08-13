@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,14 +40,13 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainHabitScreen() {
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { 2 })
-    val coroutineScope = rememberCoroutineScope()
 
     val scoreStateViewModel: ScoreStateViewModel = hiltViewModel()
     val scoreState by scoreStateViewModel.score.collectAsState()
+    var score by remember { mutableIntStateOf(0) }
     LaunchedEffect(key1 = Unit) {
         scoreStateViewModel.getScore()
     }
-    var score by remember { mutableIntStateOf(0) }
     LaunchedEffect(key1 = scoreState) {
         score = scoreState
     }
@@ -55,30 +55,7 @@ fun MainHabitScreen() {
             .fillMaxSize()
             .padding(vertical = 10.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            HabitTypeItem(
-                modifier = Modifier.weight(0.33f),
-                text = stringResource(R.string.common_habits),
-                enabled = pagerState.currentPage == 0
-            ) {
-                coroutineScope.launch {
-                    pagerState.animateScrollToPage(0, animationSpec = tween(500))
-                }
-            }
-
-            HabitTypeItem(
-                modifier = Modifier.weight(0.33f),
-                text = stringResource(R.string.self_added),
-                enabled = pagerState.currentPage == 1
-            ) {
-                coroutineScope.launch {
-                    pagerState.animateScrollToPage(1, animationSpec = tween(500))
-                }
-            }
-        }
+        PagerTitles(pagerState = pagerState)
 
         Spacer(modifier = Modifier.height(15.dp))
 
@@ -111,4 +88,34 @@ fun MainHabitScreen() {
         }
     }
 
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun PagerTitles(pagerState: PagerState) {
+    val coroutineScope = rememberCoroutineScope()
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        HabitTypeItem(
+            modifier = Modifier.weight(0.33f),
+            text = stringResource(R.string.common_habits),
+            enabled = pagerState.currentPage == 0
+        ) {
+            coroutineScope.launch {
+                pagerState.animateScrollToPage(0, animationSpec = tween(500))
+            }
+        }
+
+        HabitTypeItem(
+            modifier = Modifier.weight(0.33f),
+            text = stringResource(R.string.self_added),
+            enabled = pagerState.currentPage == 1
+        ) {
+            coroutineScope.launch {
+                pagerState.animateScrollToPage(1, animationSpec = tween(500))
+            }
+        }
+    }
 }
