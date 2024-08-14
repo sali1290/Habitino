@@ -9,26 +9,25 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-data class BackgroundTaskResult<T>(
+data class ScreenState<T>(
     val loading: Boolean = false,
     val error: String? = null,
     val result: T
 )
 
-fun <T> ViewModel.updateInBackground(
-    flow: MutableStateFlow<BackgroundTaskResult<T>>,
+fun <T> ViewModel.updateScreenState(
     scope: CoroutineScope = viewModelScope,
     dispatcher: CoroutineDispatcher = Dispatchers.IO,
-    useCase: suspend () -> T
+    state: MutableStateFlow<ScreenState<T>>,
+    useCase: suspend () -> Unit
 ) {
     scope.launch(dispatcher) {
-        flow.update { it.copy(loading = true, error = null) }
+        state.update { it.copy(loading = true, error = null) }
         try {
-            val result = useCase.invoke()
-            flow.update { BackgroundTaskResult(result = result) }
+            useCase.invoke()
         } catch (exception: Exception) {
             val message = exception.message ?: "Something went wrong"
-            flow.update { it.copy(loading = false, error = message) }
+            state.update { it.copy(loading = false, error = message) }
         }
     }
 }

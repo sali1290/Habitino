@@ -18,10 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -31,25 +28,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.sali.habitino.R
 import com.sali.habitino.view.component.HabitTypeItem
 import com.sali.habitino.view.component.RemoteHabitsList
-import com.sali.habitino.view.component.SelfAddedHabitsList
 import com.sali.habitino.view.theme.LightBlue
-import com.sali.habitino.viewmodel.ScoreStateViewModel
+import com.sali.habitino.viewmodel.main.MainActions
+import com.sali.habitino.viewmodel.main.MainViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun MainHabitScreen() {
+fun MainHabitScreen(mainViewModel: MainViewModel = hiltViewModel()) {
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { 2 })
-
-    val scoreStateViewModel: ScoreStateViewModel = hiltViewModel()
-    val scoreState by scoreStateViewModel.score.collectAsState()
-    var score by remember { mutableIntStateOf(0) }
+    val mainScreenState by mainViewModel.mainScreenState.collectAsState()
     LaunchedEffect(key1 = Unit) {
-        scoreStateViewModel.getScore()
+        mainViewModel.onAction(MainActions.GetScore)
     }
-    LaunchedEffect(key1 = scoreState) {
-        score = scoreState
-    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -60,7 +52,7 @@ fun MainHabitScreen() {
         Spacer(modifier = Modifier.height(15.dp))
 
         Text(
-            text = stringResource(R.string.your_score, score),
+            text = stringResource(R.string.your_score, mainScreenState.result.score),
             fontSize = 20.sp,
             color = LightBlue,
             modifier = Modifier
@@ -72,17 +64,12 @@ fun MainHabitScreen() {
         HorizontalPager(state = pagerState) { page ->
             when (page) {
                 0 -> {
-                    RemoteHabitsList {
-                        score += it
-                        scoreStateViewModel.saveScore(score)
-                    }
+                    RemoteHabitsList(mainViewModel, mainScreenState)
                 }
 
                 1 -> {
-                    SelfAddedHabitsList {
-                        score += it
-                        scoreStateViewModel.saveScore(score)
-                    }
+//                    SelfAddedHabitsList {
+//                    }
                 }
             }
         }
