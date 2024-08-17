@@ -41,8 +41,6 @@ fun MainHabitScreen(mainViewModel: MainViewModel = hiltViewModel()) {
     val mainScreenState by mainViewModel.mainScreenState.collectAsState()
     LaunchedEffect(key1 = Unit) {
         mainViewModel.onAction(MainActions.GetScore)
-        mainViewModel.onAction(MainActions.GetCommonHabits)
-        mainViewModel.onAction(MainActions.GetSelfAddedHabits)
     }
 
     Column(
@@ -55,7 +53,7 @@ fun MainHabitScreen(mainViewModel: MainViewModel = hiltViewModel()) {
         Spacer(modifier = Modifier.height(15.dp))
 
         Text(
-            text = stringResource(R.string.your_score, mainScreenState.result.score),
+            text = stringResource(R.string.your_score, mainScreenState.score),
             fontSize = 20.sp,
             color = LightBlue,
             modifier = Modifier

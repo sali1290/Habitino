@@ -5,6 +5,7 @@ import com.sali.habitino.model.dto.SelfAddedHabit
 
 sealed class MainActions {
     data object GetScore : MainActions()
+
     data object GetCommonHabits : MainActions()
 
     data object GetSelfAddedHabits : MainActions()

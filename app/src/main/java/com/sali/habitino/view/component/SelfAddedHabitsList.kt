@@ -22,14 +22,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sali.habitino.R
-import com.sali.habitino.view.utils.ScreenState
 import com.sali.habitino.viewmodel.main.MainActions
 import com.sali.habitino.viewmodel.main.MainScreenState
 import com.sali.habitino.viewmodel.main.MainViewModel
 import java.time.LocalDateTime
 
 @Composable
-fun SelfAddedHabitsList(mainViewModel: MainViewModel, screenState: ScreenState<MainScreenState>) {
+fun SelfAddedHabitsList(mainViewModel: MainViewModel, screenState: MainScreenState) {
 
     var showAddHabitDialog by remember { mutableStateOf(false) }
 
@@ -62,7 +61,7 @@ fun SelfAddedHabitsList(mainViewModel: MainViewModel, screenState: ScreenState<M
                 showAddHabitDialog = true
             }
         },
-        contentWindowInsets = WindowInsets(top = 0.dp)
+        contentWindowInsets = WindowInsets(left = 10.dp, top = 0.dp, right = 10.dp, bottom = 0.dp)
     ) { innerPadding ->
         HabitList(
             mainViewModel = mainViewModel,
@@ -74,13 +73,13 @@ fun SelfAddedHabitsList(mainViewModel: MainViewModel, screenState: ScreenState<M
 
 @Composable
 private fun HabitList(
-    mainViewModel: MainViewModel, screenState: ScreenState<MainScreenState>, modifier: Modifier
+    mainViewModel: MainViewModel, screenState: MainScreenState, modifier: Modifier
 ) {
     val tagsList = remember { mutableStateListOf<String>() }
     Column(modifier = Modifier.fillMaxSize()) {
         TagSelector(tagsList = tagsList)
         LazyColumn(modifier = modifier) {
-            itemsIndexed(screenState.result.selfAddedHabits) { _, item ->
+            itemsIndexed(screenState.selfAddedHabits) { _, item ->
                 HabitItem(
                     selfAdded = true,
                     onDeleteClick = { mainViewModel.onAction(MainActions.DeleteHabit(item)) },
@@ -98,7 +97,7 @@ private fun HabitList(
                     val newScore = if (!item.isCompleted) 1 else -1
                     mainViewModel.onAction(
                         MainActions.UpdateSelfAddedHabit(
-                            score = screenState.result.score + newScore,
+                            score = screenState.score + newScore,
                             selfAddedHabit = updatedItem
                         )
                     )
