@@ -1,5 +1,7 @@
 package com.sali.habitino.view.component
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,29 +13,29 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.sali.habitino.R
-import com.sali.habitino.viewmodel.SelfAddedHabitViewModel
+import com.sali.habitino.view.utils.ScreenState
+import com.sali.habitino.viewmodel.main.MainActions
+import com.sali.habitino.viewmodel.main.MainScreenState
+import com.sali.habitino.viewmodel.main.MainViewModel
 import java.time.LocalDateTime
 
 @Composable
-fun SelfAddedHabitsList(onCompletedClick: (Int) -> Unit) {
-
-    val selfAddedHabitViewModel: SelfAddedHabitViewModel = hiltViewModel()
-    val selfAddedHabitsState by selfAddedHabitViewModel.habits.collectAsState()
-    LaunchedEffect(key1 = Unit) {
-        selfAddedHabitViewModel.getAllSelfAddedHabits()
-    }
+fun SelfAddedHabitsList(mainViewModel: MainViewModel, screenState: ScreenState<MainScreenState>) {
 
     var showAddHabitDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(key1 = Unit) {
+        mainViewModel.onAction(MainActions.GetSelfAddedHabits)
+    }
 
     if (showAddHabitDialog) {
         AddHabitDialog(
@@ -41,38 +43,47 @@ fun SelfAddedHabitsList(onCompletedClick: (Int) -> Unit) {
                 showAddHabitDialog = false
             },
             onConfirmRequest = { title, description, solution, state, tags ->
-                selfAddedHabitViewModel.insertSelfAddedHabit(
-                    title = title,
-                    description = description,
-                    solution = solution,
-                    state = state,
-                    tags = tags
+                mainViewModel.onAction(
+                    MainActions.AddHabit(
+                        title,
+                        description,
+                        solution,
+                        state,
+                        tags
+                    )
                 )
                 showAddHabitDialog = false
             }
         )
     }
-
     Scaffold(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(10.dp),
         floatingActionButton = {
             AddHabitFloatingActionButton {
                 showAddHabitDialog = true
             }
-        }
+        },
+        contentWindowInsets = WindowInsets(top = 0.dp)
     ) { innerPadding ->
+        HabitList(
+            mainViewModel = mainViewModel,
+            screenState = screenState,
+            modifier = Modifier.padding(innerPadding)
+        )
+    }
+}
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            itemsIndexed(selfAddedHabitsState) { _, item ->
+@Composable
+private fun HabitList(
+    mainViewModel: MainViewModel, screenState: ScreenState<MainScreenState>, modifier: Modifier
+) {
+    val tagsList = remember { mutableStateListOf<String>() }
+    Column(modifier = Modifier.fillMaxSize()) {
+        TagSelector(tagsList = tagsList)
+        LazyColumn(modifier = modifier) {
+            itemsIndexed(screenState.result.selfAddedHabits) { _, item ->
                 HabitItem(
                     selfAdded = true,
-                    onDeleteClick = { selfAddedHabitViewModel.deleteSelfAddedHabit(item) },
+                    onDeleteClick = { mainViewModel.onAction(MainActions.DeleteHabit(item)) },
                     title = item.title,
                     description = item.description,
                     solution = item.solution,
@@ -80,28 +91,25 @@ fun SelfAddedHabitsList(onCompletedClick: (Int) -> Unit) {
                     tags = item.tags.names,
                     isCompleted = item.isCompleted
                 ) {
-                    if (!item.isCompleted) {
-                        onCompletedClick(1)
-                    } else {
-                        onCompletedClick(-1)
-                    }
-
                     val updatedItem = item.copy(
                         isCompleted = !item.isCompleted,
                         lastCompletedDate = LocalDateTime.now()
                     )
-
-                    selfAddedHabitViewModel.updateHabit(updatedItem)
+                    val newScore = if (!item.isCompleted) 1 else -1
+                    mainViewModel.onAction(
+                        MainActions.UpdateSelfAddedHabit(
+                            score = screenState.result.score + newScore,
+                            selfAddedHabit = updatedItem
+                        )
+                    )
                 }
             }
         }
-
     }
-
 }
 
 @Composable
-fun AddHabitFloatingActionButton(onClick: () -> Unit) {
+private fun AddHabitFloatingActionButton(onClick: () -> Unit) {
     FloatingActionButton(
         onClick = { onClick() },
     ) {

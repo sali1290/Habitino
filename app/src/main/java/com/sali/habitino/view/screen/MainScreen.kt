@@ -28,6 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.sali.habitino.R
 import com.sali.habitino.view.component.HabitTypeItem
 import com.sali.habitino.view.component.RemoteHabitsList
+import com.sali.habitino.view.component.SelfAddedHabitsList
 import com.sali.habitino.view.theme.LightBlue
 import com.sali.habitino.viewmodel.main.MainActions
 import com.sali.habitino.viewmodel.main.MainViewModel
@@ -68,8 +69,7 @@ fun MainHabitScreen(mainViewModel: MainViewModel = hiltViewModel()) {
                 }
 
                 1 -> {
-//                    SelfAddedHabitsList {
-//                    }
+                    SelfAddedHabitsList(mainViewModel, mainScreenState) 
                 }
             }
         }
