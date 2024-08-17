@@ -12,7 +12,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -32,9 +31,6 @@ fun RemoteHabitsList(
     mainViewModel: MainViewModel,
     screenState: ScreenState<MainScreenState>
 ) {
-    LaunchedEffect(key1 = Unit) {
-        mainViewModel.onAction(MainActions.GetCommonHabits)
-    }
     Box(
         modifier = Modifier
             .fillMaxSize()

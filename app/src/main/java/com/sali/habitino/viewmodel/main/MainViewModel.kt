@@ -10,6 +10,7 @@ import com.sali.habitino.model.repo.SelfAddedHabitRepo
 import com.sali.habitino.view.utils.ScreenState
 import com.sali.habitino.view.utils.updateScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,34 +32,32 @@ class MainViewModel @Inject constructor(
 
     fun onAction(event: MainActions) {
         when (event) {
-            is MainActions.GetScore -> {
-                getScore()
-            }
+            is MainActions.GetScore -> getScore()
 
-            is MainActions.GetCommonHabits -> {
-                getCommonHabits()
-            }
+            is MainActions.GetCommonHabits -> getCommonHabits()
 
-            is MainActions.GetSelfAddedHabits -> {
-                getSelfAddedHabits()
-            }
+            is MainActions.GetSelfAddedHabits -> getSelfAddedHabits()
 
-            is MainActions.AddHabit -> {
-                addHabit(event.title, event.description, event.solution, event.state, event.tags)
-            }
+            is MainActions.AddHabit -> addHabit(
+                event.title,
+                event.description,
+                event.solution,
+                event.state,
+                event.tags
+            )
 
-            is MainActions.DeleteHabit -> {
-                deleteSelfAddedHabit(event.selfAddedHabit)
-            }
+            is MainActions.DeleteHabit -> deleteSelfAddedHabit(event.selfAddedHabit)
 
             is MainActions.UpdateCommonHabit -> {
                 saveScore(event.score)
                 updateCommonHabit(event.habit)
+                getScore()
             }
 
             is MainActions.UpdateSelfAddedHabit -> {
                 saveScore(event.score)
                 updateSelfAddedHabit(event.selfAddedHabit)
+                getScore()
             }
 
             is MainActions.SearchByTag -> {}
@@ -67,9 +66,15 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun getScore() = updateScreenState(state = _mainScreenState) {
+    private fun getScore() = viewModelScope.launch(Dispatchers.IO) {
         _mainScreenState.update {
-            ScreenState(result = MainScreenState(score = scoreRepo.getScore()))
+            it.copy(
+                result = MainScreenState(
+                    score = scoreRepo.getScore(),
+                    commonHabits = it.result.commonHabits,
+                    selfAddedHabits = it.result.selfAddedHabits
+                )
+            )
         }
     }
 
@@ -79,20 +84,25 @@ class MainViewModel @Inject constructor(
 
     private fun getCommonHabits() = updateScreenState(state = _mainScreenState) {
         _mainScreenState.update {
-            ScreenState(result = MainScreenState(commonHabits = remoteHabitRepo.getAllHabits()))
+            it.copy(result = MainScreenState(commonHabits = remoteHabitRepo.getAllHabits()))
         }
     }
 
     private fun updateCommonHabit(habit: Habit) = updateScreenState(state = _mainScreenState) {
         remoteHabitRepo.updateHabit(habit)
         _mainScreenState.update {
-            ScreenState(result = MainScreenState(commonHabits = remoteHabitRepo.getAllHabits()))
+            it.copy(
+                result = MainScreenState(
+                    score = it.result.score,
+                    commonHabits = remoteHabitRepo.getAllHabits()
+                )
+            )
         }
     }
 
     private fun getSelfAddedHabits() = updateScreenState(state = _mainScreenState) {
         _mainScreenState.update {
-            ScreenState(result = MainScreenState(selfAddedHabits = selfAddedHabitRepo.getAllHabits()))
+            it.copy(result = MainScreenState(commonHabits = remoteHabitRepo.getAllHabits()))
         }
     }
 

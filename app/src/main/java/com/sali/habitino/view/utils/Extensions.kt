@@ -24,6 +24,7 @@ fun <T> ViewModel.updateScreenState(
     scope.launch(dispatcher) {
         state.update { it.copy(loading = true, error = null) }
         try {
+            state.update { it.copy(loading = false) }
             useCase.invoke()
         } catch (exception: Exception) {
             val message = exception.message ?: "Something went wrong"
