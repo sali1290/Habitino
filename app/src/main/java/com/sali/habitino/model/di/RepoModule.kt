@@ -2,8 +2,8 @@ package com.sali.habitino.model.di
 
 import com.sali.habitino.model.repo.HabitStateRepo
 import com.sali.habitino.model.repo.HabitStateRepoImpl
-import com.sali.habitino.model.repo.RemoteHabitRepo
-import com.sali.habitino.model.repo.RemoteHabitRepoImpl
+import com.sali.habitino.model.repo.CommonHabitRepo
+import com.sali.habitino.model.repo.CommonHabitRepoImpl
 import com.sali.habitino.model.repo.ScoreRepo
 import com.sali.habitino.model.repo.ScoreRepoImpl
 import com.sali.habitino.model.repo.SelfAddedHabitRepo
@@ -32,6 +32,6 @@ interface RepoModule {
 
     @Binds
     @Singleton
-    fun bindRemoteHabitRepo(remoteHabitRepoImpl: RemoteHabitRepoImpl): RemoteHabitRepo
+    fun bindCommonHabitRepo(remoteHabitRepoImpl: CommonHabitRepoImpl): CommonHabitRepo
 
 }

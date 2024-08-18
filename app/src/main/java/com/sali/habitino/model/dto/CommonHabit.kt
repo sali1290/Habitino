@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import java.time.LocalDateTime
 
 @Entity
-data class Habit(
+data class CommonHabit(
     @PrimaryKey
     var id: String,
 

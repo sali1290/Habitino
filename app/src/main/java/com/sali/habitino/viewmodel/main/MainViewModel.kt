@@ -2,9 +2,9 @@ package com.sali.habitino.viewmodel.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sali.habitino.model.dto.Habit
+import com.sali.habitino.model.dto.CommonHabit
 import com.sali.habitino.model.dto.SelfAddedHabit
-import com.sali.habitino.model.repo.RemoteHabitRepo
+import com.sali.habitino.model.repo.CommonHabitRepo
 import com.sali.habitino.model.repo.ScoreRepo
 import com.sali.habitino.model.repo.SelfAddedHabitRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,7 +21,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val scoreRepo: ScoreRepo,
-    private val remoteHabitRepo: RemoteHabitRepo,
+    private val commonHabitRepo: CommonHabitRepo,
     private val selfAddedHabitRepo: SelfAddedHabitRepo
 ) : ViewModel() {
 
@@ -50,7 +50,7 @@ class MainViewModel @Inject constructor(
 
             is MainActions.UpdateCommonHabit -> {
                 saveScore(event.score)
-                updateCommonHabit(event.habit)
+                updateCommonHabit(event.commonHabit)
                 getScore()
             }
 
@@ -79,19 +79,19 @@ class MainViewModel @Inject constructor(
         dispatcher = Dispatchers.IO,
         state = _mainScreenState
     ) {
-        _mainScreenState.update { it.copy(commonHabits = remoteHabitRepo.getAllHabits()) }
+        _mainScreenState.update { it.copy(commonCommonHabits = commonHabitRepo.getAllHabits()) }
     }
 
-    private fun updateCommonHabit(habit: Habit) = updateMainScreenState(
+    private fun updateCommonHabit(commonHabit: CommonHabit) = updateMainScreenState(
         scope = viewModelScope,
         dispatcher = Dispatchers.IO,
         state = _mainScreenState
     ) {
-        remoteHabitRepo.updateHabit(habit)
+        commonHabitRepo.updateHabit(commonHabit)
         _mainScreenState.update {
             it.copy(
                 score = it.score,
-                commonHabits = remoteHabitRepo.getAllHabits()
+                commonCommonHabits = commonHabitRepo.getAllHabits()
             )
         }
     }

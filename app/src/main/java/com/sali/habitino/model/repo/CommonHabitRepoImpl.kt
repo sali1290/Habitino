@@ -5,7 +5,7 @@ import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.sali.habitino.R
 import com.sali.habitino.model.db.HabitDao
-import com.sali.habitino.model.dto.Habit
+import com.sali.habitino.model.dto.CommonHabit
 import com.sali.habitino.model.dto.Tags
 import com.sali.habitino.model.utils.DataSource
 import com.sali.habitino.model.utils.Keys
@@ -20,32 +20,32 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 @Suppress("UNCHECKED_CAST")
-class RemoteHabitRepoImpl @Inject constructor(
+class CommonHabitRepoImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val habitDao: HabitDao,
     private val sharedPrefUtils: SharedPrefUtils,
     @ApplicationContext private val context: Context
-) : RemoteHabitRepo {
+) : CommonHabitRepo {
 
-    override suspend fun getAllHabits(): List<Habit> {
-        val habitList = mutableListOf<Habit>()
-        habitList.addAll(fetchLocalHabit())
-        if (habitList.isEmpty() || chooseDataSource() == DataSource.Remote) {
-            habitList.apply {
+    override suspend fun getAllHabits(): List<CommonHabit> {
+        val commonHabitList = mutableListOf<CommonHabit>()
+        commonHabitList.addAll(fetchLocalHabit())
+        if (commonHabitList.isEmpty() || chooseDataSource() == DataSource.Remote) {
+            commonHabitList.apply {
                 clear()
                 addAll(fetchRemoteHabits())
             }
-            saveHabitsToLocalDataSource(habitList)
+            saveHabitsToLocalDataSource(commonHabitList)
         }
-        return habitList
+        return commonHabitList
     }
 
-    override suspend fun updateHabit(habit: Habit) {
-        habitDao.upsert(habit)
+    override suspend fun updateHabit(commonHabit: CommonHabit) {
+        habitDao.upsert(commonHabit)
     }
 
-    private suspend fun fetchRemoteHabits() = suspendCoroutine<List<Habit>> { continuation ->
-        val habitsList = mutableListOf<Habit>()
+    private suspend fun fetchRemoteHabits() = suspendCoroutine<List<CommonHabit>> { continuation ->
+        val habitsList = mutableListOf<CommonHabit>()
         firestore.collection(Keys.HABIT_COLLECTION).get()
             .addOnSuccessListener { documents ->
                 for (document in documents) {
@@ -54,7 +54,7 @@ class RemoteHabitRepoImpl @Inject constructor(
                         document.data.getValue(
                             document.data.keys.toString().removeSurrounding("[", "]")
                         ) as HashMap<String, *>
-                    val habit = Habit(
+                    val commonHabit = CommonHabit(
                         id = document.id,
                         title = document.data.keys.toString().removeSurrounding("[", "]"),
                         description = habitMap.getValue(Keys.HABIT_DESCRIPTION).toString(),
@@ -64,7 +64,7 @@ class RemoteHabitRepoImpl @Inject constructor(
                         isCompleted = false,
                         lastCompletedDate = null
                     )
-                    habitsList.add(habit)
+                    habitsList.add(commonHabit)
                 }
                 sharedPrefUtils.saveHabitsFetchDate()
             }
@@ -88,12 +88,12 @@ class RemoteHabitRepoImpl @Inject constructor(
             }
     }
 
-    private fun fetchLocalHabit(): List<Habit> {
+    private fun fetchLocalHabit(): List<CommonHabit> {
         return habitDao.getAll()
     }
 
-    private fun saveHabitsToLocalDataSource(habits: List<Habit>) {
-        habits.forEach {
+    private fun saveHabitsToLocalDataSource(commonHabits: List<CommonHabit>) {
+        commonHabits.forEach {
             habitDao.upsert(it)
         }
     }

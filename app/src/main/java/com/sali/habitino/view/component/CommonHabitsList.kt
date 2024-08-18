@@ -39,7 +39,7 @@ fun RemoteHabitsList(
         if (screenState.loading)
             ProgressBar()
 
-        if (screenState.commonHabits.isNotEmpty())
+        if (screenState.commonCommonHabits.isNotEmpty())
             HabitList(mainViewModel = mainViewModel, screenState = screenState)
 
         if (!screenState.error.isNullOrEmpty())
@@ -56,7 +56,7 @@ private fun HabitList(mainViewModel: MainViewModel, screenState: MainScreenState
     Column(modifier = Modifier.fillMaxSize()) {
         TagSelector(tagsList = tagsList)
         LazyColumn {
-            itemsIndexed(screenState.commonHabits) { _, item ->
+            itemsIndexed(screenState.commonCommonHabits) { _, item ->
                 if (item.tags.names.containsAll(tagsList))
                     HabitItem(
                         title = item.title,
@@ -74,7 +74,7 @@ private fun HabitList(mainViewModel: MainViewModel, screenState: MainScreenState
                         mainViewModel.onAction(
                             MainActions.UpdateCommonHabit(
                                 score = screenState.score + newScore,
-                                habit = updatedItem
+                                commonHabit = updatedItem
                             )
                         )
                     }

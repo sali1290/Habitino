@@ -1,6 +1,6 @@
 package com.sali.habitino.viewmodel.main
 
-import com.sali.habitino.model.dto.Habit
+import com.sali.habitino.model.dto.CommonHabit
 import com.sali.habitino.model.dto.SelfAddedHabit
 
 sealed class MainActions {
@@ -10,7 +10,7 @@ sealed class MainActions {
 
     data object GetSelfAddedHabits : MainActions()
 
-    data class UpdateCommonHabit(val score: Int, val habit: Habit) : MainActions()
+    data class UpdateCommonHabit(val score: Int, val commonHabit: CommonHabit) : MainActions()
 
     data class UpdateSelfAddedHabit(val score: Int, val selfAddedHabit: SelfAddedHabit) :
         MainActions()
