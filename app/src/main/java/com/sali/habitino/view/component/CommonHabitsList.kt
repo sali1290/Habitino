@@ -3,6 +3,7 @@ package com.sali.habitino.view.component
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -10,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
@@ -30,17 +32,19 @@ fun RemoteHabitsList(
     mainViewModel: MainViewModel,
     screenState: MainScreenState
 ) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 10.dp)
-    ) {
+    Scaffold(
+        contentWindowInsets = WindowInsets(left = 10.dp, top = 0.dp, right = 10.dp, bottom = 0.dp)
+    ) { innerPadding ->
 
         if (screenState.loading)
             ProgressBar()
 
         if (screenState.commonCommonHabits.isNotEmpty())
-            HabitList(mainViewModel = mainViewModel, screenState = screenState)
+            HabitList(
+                mainViewModel = mainViewModel,
+                screenState = screenState,
+                modifier = Modifier.padding(innerPadding)
+            )
 
         if (!screenState.error.isNullOrEmpty())
             ErrorMessage(message = screenState.error) {
@@ -51,11 +55,15 @@ fun RemoteHabitsList(
 }
 
 @Composable
-private fun HabitList(mainViewModel: MainViewModel, screenState: MainScreenState) {
+private fun HabitList(
+    mainViewModel: MainViewModel,
+    screenState: MainScreenState,
+    modifier: Modifier
+) {
     val tagsList = remember { mutableStateListOf<String>() }
     Column(modifier = Modifier.fillMaxSize()) {
         TagSelector(tagsList = tagsList)
-        LazyColumn {
+        LazyColumn(modifier = modifier) {
             itemsIndexed(screenState.commonCommonHabits) { _, item ->
                 if (item.tags.names.containsAll(tagsList))
                     HabitItem(

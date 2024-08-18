@@ -21,6 +21,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -50,7 +51,7 @@ fun MainHabitScreen(mainViewModel: MainViewModel = hiltViewModel()) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = 10.dp)
+            .padding(vertical = dimensionResource(id = R.dimen.screen_padding))
     ) {
         PagerTitles(pagerState = pagerState)
 
@@ -62,7 +63,7 @@ fun MainHabitScreen(mainViewModel: MainViewModel = hiltViewModel()) {
             color = LightBlue,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 10.dp),
+                .padding(horizontal = dimensionResource(id = R.dimen.screen_padding)),
             textAlign = TextAlign.Start
         )
 
