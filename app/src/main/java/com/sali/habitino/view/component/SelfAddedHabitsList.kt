@@ -12,7 +12,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -31,10 +30,6 @@ import java.time.LocalDateTime
 fun SelfAddedHabitsList(mainViewModel: MainViewModel, screenState: MainScreenState) {
 
     var showAddHabitDialog by remember { mutableStateOf(false) }
-
-    LaunchedEffect(key1 = Unit) {
-        mainViewModel.onAction(MainActions.GetSelfAddedHabits)
-    }
 
     if (showAddHabitDialog) {
         AddHabitDialog(
