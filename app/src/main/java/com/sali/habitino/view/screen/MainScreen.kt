@@ -1,6 +1,5 @@
 package com.sali.habitino.view.screen
 
-import android.util.Log
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Arrangement
@@ -45,7 +44,6 @@ fun MainHabitScreen(mainViewModel: MainViewModel = hiltViewModel()) {
         mainViewModel.onAction(MainActions.GetScore)
         mainViewModel.onAction(MainActions.GetCommonHabits)
         mainViewModel.onAction(MainActions.GetSelfAddedHabits)
-        Log.d("MainHabitScreen", "MainHabitScreen")
     }
 
     Column(
