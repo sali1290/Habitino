@@ -22,7 +22,7 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
     private val scoreRepo: ScoreRepo,
     private val commonHabitRepo: CommonHabitRepo,
-    private val selfAddedHabitRepo: SelfAddedHabitRepo
+    private val selfAddedHabitRepo: dagger.Lazy<SelfAddedHabitRepo>
 ) : ViewModel() {
 
     private val _mainScreenState =
@@ -102,7 +102,7 @@ class MainViewModel @Inject constructor(
         state = _mainScreenState
     ) {
         _mainScreenState.update {
-            it.copy(selfAddedHabits = selfAddedHabitRepo.getAllHabits())
+            it.copy(selfAddedHabits = selfAddedHabitRepo.get().getAllHabits())
         }
     }
 
@@ -112,8 +112,10 @@ class MainViewModel @Inject constructor(
             dispatcher = Dispatchers.IO,
             state = _mainScreenState
         ) {
-            selfAddedHabitRepo.updateHabit(selfAddedHabit)
-            _mainScreenState.update { it.copy(selfAddedHabits = selfAddedHabitRepo.getAllHabits()) }
+            selfAddedHabitRepo.get().updateHabit(selfAddedHabit)
+            _mainScreenState.update {
+                it.copy(selfAddedHabits = selfAddedHabitRepo.get().getAllHabits())
+            }
         }
 
     private fun addHabit(
@@ -127,14 +129,16 @@ class MainViewModel @Inject constructor(
         dispatcher = Dispatchers.IO,
         state = _mainScreenState
     ) {
-        selfAddedHabitRepo.insert(
+        selfAddedHabitRepo.get().insert(
             title = title,
             description = description,
             solution = solution,
             state = state,
             tags = tags
         )
-        _mainScreenState.update { it.copy(selfAddedHabits = selfAddedHabitRepo.getAllHabits()) }
+        _mainScreenState.update {
+            it.copy(selfAddedHabits = selfAddedHabitRepo.get().getAllHabits())
+        }
     }
 
     private fun deleteSelfAddedHabit(selfAddedHabit: SelfAddedHabit) =
@@ -143,8 +147,10 @@ class MainViewModel @Inject constructor(
             dispatcher = Dispatchers.IO,
             state = _mainScreenState
         ) {
-            selfAddedHabitRepo.delete(selfAddedHabit)
-            _mainScreenState.update { it.copy(selfAddedHabits = selfAddedHabitRepo.getAllHabits()) }
+            selfAddedHabitRepo.get().delete(selfAddedHabit)
+            _mainScreenState.update {
+                it.copy(selfAddedHabits = selfAddedHabitRepo.get().getAllHabits())
+            }
         }
 }
 
