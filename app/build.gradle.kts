@@ -58,7 +58,9 @@ composeCompiler {
 
 dependencies {
 
-    implementation (libs.gson)
+    implementation(libs.androidx.lifecycle.runtime.compose)
+
+    implementation(libs.gson)
 
     implementation(libs.firebase.firestore)
     implementation(libs.com.google.firebase.firebase.appcheck.playintegrity2)

@@ -16,7 +16,6 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -26,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sali.habitino.R
 import com.sali.habitino.view.component.HabitTypeItem
 import com.sali.habitino.view.component.RemoteHabitsList
@@ -39,7 +39,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun MainHabitScreen(mainViewModel: MainViewModel = hiltViewModel()) {
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { 2 })
-    val mainScreenState by mainViewModel.mainScreenState.collectAsState()
+    val mainScreenState by mainViewModel.mainScreenState.collectAsStateWithLifecycle()
     LaunchedEffect(key1 = Unit) {
         mainViewModel.onAction(MainActions.GetScore)
         mainViewModel.onAction(MainActions.GetCommonHabits)
