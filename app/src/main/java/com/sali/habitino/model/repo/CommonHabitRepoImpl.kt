@@ -7,56 +7,59 @@ import com.sali.habitino.R
 import com.sali.habitino.model.db.HabitDao
 import com.sali.habitino.model.dto.CommonHabit
 import com.sali.habitino.model.dto.Tags
+import com.sali.habitino.model.utils.ConnectivityManager
 import com.sali.habitino.model.utils.DataSource
 import com.sali.habitino.model.utils.Keys
 import com.sali.habitino.model.utils.SharedPrefUtils
 import com.sali.habitino.model.utils.TagKeys
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.tasks.await
 import java.io.IOException
 import java.time.LocalDateTime
 import javax.inject.Inject
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
 @Suppress("UNCHECKED_CAST")
 class CommonHabitRepoImpl @Inject constructor(
     private val firestore: FirebaseFirestore,
     private val habitDao: HabitDao,
     private val sharedPrefUtils: SharedPrefUtils,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val connectivityManager: ConnectivityManager
 ) : CommonHabitRepo {
 
     override suspend fun getAllHabits(): List<CommonHabit> {
         val commonHabitList = mutableListOf<CommonHabit>()
         commonHabitList.addAll(fetchLocalHabit())
-        if (commonHabitList.isEmpty() || chooseDataSource() == DataSource.Remote) {
+        return if (commonHabitList.isNotEmpty() && chooseDataSource() == DataSource.Local) {
+            Log.d(TagKeys.FIRESTORE_ANSWER, "Data fetched from local data source")
+            commonHabitList
+        } else {
             commonHabitList.apply {
                 clear()
                 addAll(fetchRemoteHabits())
             }
+            Log.d(TagKeys.FIRESTORE_ANSWER, "Data fetched from remote data source")
             saveHabitsToLocalDataSource(commonHabitList)
+            commonHabitList
         }
-        return commonHabitList
     }
 
     override suspend fun updateHabit(commonHabit: CommonHabit) {
         habitDao.upsert(commonHabit)
     }
 
-    private suspend fun fetchRemoteHabits() = suspendCoroutine<List<CommonHabit>> { continuation ->
-        val habitsList = mutableListOf<CommonHabit>()
-        firestore.collection(Keys.HABIT_COLLECTION).get()
-            .addOnSuccessListener { documents ->
-                for (document in documents) {
-                    Log.d(TagKeys.FIRESTORE_ANSWER, document.data.toString())
+    private suspend fun fetchRemoteHabits(): List<CommonHabit> {
+        if (connectivityManager.isNetworkConnected()) {
+            try {
+                val habitsCollection = firestore.collection(Keys.HABIT_COLLECTION).get()
+                val habits = habitsCollection.await().map {
                     val habitMap =
-                        document.data.getValue(
-                            document.data.keys.toString().removeSurrounding("[", "]")
+                        it.data.getValue(
+                            it.data.keys.toString().removeSurrounding("[", "]")
                         ) as HashMap<String, *>
-                    val commonHabit = CommonHabit(
-                        id = document.id,
-                        title = document.data.keys.toString().removeSurrounding("[", "]"),
+                    CommonHabit(
+                        id = it.id,
+                        title = it.data.keys.toString().removeSurrounding("[", "]"),
                         description = habitMap.getValue(Keys.HABIT_DESCRIPTION).toString(),
                         solution = habitMap.getValue(Keys.HABIT_SOLUTION) as? String,
                         state = habitMap.getValue(Keys.HABIT_STATE).toString(),
@@ -64,28 +67,17 @@ class CommonHabitRepoImpl @Inject constructor(
                         isCompleted = false,
                         lastCompletedDate = null
                     )
-                    habitsList.add(commonHabit)
                 }
-                sharedPrefUtils.saveHabitsFetchDate()
+                return habits
+            } catch (exception: Exception) {
+                throw IOException(
+                    exception.message
+                        ?: context.getString(R.string.something_went_wrong_please_try_again)
+                )
             }
-            .addOnCompleteListener {
-
-                if (!it.isSuccessful) {
-                    Log.d(
-                        TagKeys.FIRESTORE_ANSWER,
-                        context.getString(R.string.connection_error_please_try_again)
-                    )
-                    val exception =
-                        IOException(context.getString(R.string.connection_error_please_try_again))
-                    continuation.resumeWithException(exception)
-                } else {
-                    continuation.resume(habitsList)
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.d(TagKeys.FIRESTORE_ANSWER, exception.message.toString())
-                throw exception
-            }
+        } else {
+            throw IOException(context.getString(R.string.please_check_your_internet_connection))
+        }
     }
 
     private fun fetchLocalHabit(): List<CommonHabit> {
@@ -93,6 +85,7 @@ class CommonHabitRepoImpl @Inject constructor(
     }
 
     private fun saveHabitsToLocalDataSource(commonHabits: List<CommonHabit>) {
+        sharedPrefUtils.saveHabitsFetchDate()
         commonHabits.forEach {
             habitDao.upsert(it)
         }

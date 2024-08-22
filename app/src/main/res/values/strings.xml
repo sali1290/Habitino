@@ -20,6 +20,7 @@
     <string name="good">good</string>
     <string name="delete_all_tags">Delete all tags</string>
     <string name="search_by_tags">Search by tags</string>
-    <string name="connection_error_please_try_again">Connection error, please try again</string>
+    <string name="something_went_wrong_please_try_again">Something went wrong, please try again</string>
     <string name="search_by_tag">Search by tag</string>
+    <string name="please_check_your_internet_connection">Please check your internet connection</string>
 </resources>
