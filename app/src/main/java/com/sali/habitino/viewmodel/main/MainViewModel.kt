@@ -1,6 +1,7 @@
 package com.sali.habitino.viewmodel.main
 
 import android.util.Log
+import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sali.habitino.model.dto.CommonHabit
@@ -82,7 +83,7 @@ class MainViewModel @Inject constructor(
     ) {
         _mainScreenState.update {
             it.copy(
-                commonHabits = commonHabitRepo.getAllHabits(),
+                commonHabits = commonHabitRepo.getAllHabits().toMutableStateList(),
                 loading = false
             )
         }
@@ -97,7 +98,7 @@ class MainViewModel @Inject constructor(
         _mainScreenState.update {
             it.copy(
                 score = it.score,
-                commonHabits = commonHabitRepo.getAllHabits(),
+                commonHabits = commonHabitRepo.getAllHabits().toMutableStateList(),
                 loading = false
             )
         }
@@ -109,7 +110,10 @@ class MainViewModel @Inject constructor(
         state = _mainScreenState
     ) {
         _mainScreenState.update {
-            it.copy(selfAddedHabits = selfAddedHabitRepo.get().getAllHabits(), loading = false)
+            it.copy(
+                selfAddedHabits = selfAddedHabitRepo.get().getAllHabits().toMutableStateList(),
+                loading = false
+            )
         }
     }
 
@@ -121,7 +125,10 @@ class MainViewModel @Inject constructor(
         ) {
             selfAddedHabitRepo.get().updateHabit(selfAddedHabit)
             _mainScreenState.update {
-                it.copy(selfAddedHabits = selfAddedHabitRepo.get().getAllHabits(), loading = false)
+                it.copy(
+                    selfAddedHabits = selfAddedHabitRepo.get().getAllHabits().toMutableStateList(),
+                    loading = false
+                )
             }
         }
 
@@ -144,7 +151,10 @@ class MainViewModel @Inject constructor(
             tags = tags
         )
         _mainScreenState.update {
-            it.copy(selfAddedHabits = selfAddedHabitRepo.get().getAllHabits(), loading = false)
+            it.copy(
+                selfAddedHabits = selfAddedHabitRepo.get().getAllHabits().toMutableStateList(),
+                loading = false
+            )
         }
     }
 
@@ -156,7 +166,10 @@ class MainViewModel @Inject constructor(
         ) {
             selfAddedHabitRepo.get().delete(selfAddedHabit)
             _mainScreenState.update {
-                it.copy(selfAddedHabits = selfAddedHabitRepo.get().getAllHabits(), loading = false)
+                it.copy(
+                    selfAddedHabits = selfAddedHabitRepo.get().getAllHabits().toMutableStateList(),
+                    loading = false
+                )
             }
         }
 }

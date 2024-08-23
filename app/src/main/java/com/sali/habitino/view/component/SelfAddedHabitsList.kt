@@ -76,7 +76,7 @@ private fun HabitList(
     Column(modifier = Modifier.fillMaxSize()) {
         TagSelector(tagsList = tagsList)
         LazyColumn(modifier = modifier) {
-            itemsIndexed(screenState.selfAddedHabits) { _, item ->
+            itemsIndexed(screenState.selfAddedHabits ?: emptyList()) { _, item ->
                 HabitItem(
                     selfAdded = true,
                     onDeleteClick = { onAction(MainActions.DeleteHabit(item)) },
