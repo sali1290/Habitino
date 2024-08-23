@@ -1,5 +1,6 @@
 package com.sali.habitino.viewmodel.main
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sali.habitino.model.dto.CommonHabit
@@ -30,8 +31,8 @@ class MainViewModel @Inject constructor(
     val mainScreenState: StateFlow<MainScreenState>
         get() = _mainScreenState.asStateFlow()
 
-    fun onAction(event: MainActions) {
-        when (event) {
+    fun onAction(action: MainActions) {
+        when (action) {
             is MainActions.GetScore -> getScore()
 
             is MainActions.GetCommonHabits -> getCommonHabits()
@@ -39,24 +40,24 @@ class MainViewModel @Inject constructor(
             is MainActions.GetSelfAddedHabits -> getSelfAddedHabits()
 
             is MainActions.AddHabit -> addHabit(
-                event.title,
-                event.description,
-                event.solution,
-                event.state,
-                event.tags
+                action.title,
+                action.description,
+                action.solution,
+                action.state,
+                action.tags
             )
 
-            is MainActions.DeleteHabit -> deleteSelfAddedHabit(event.selfAddedHabit)
+            is MainActions.DeleteHabit -> deleteSelfAddedHabit(action.selfAddedHabit)
 
             is MainActions.UpdateCommonHabit -> {
-                saveScore(event.score)
-                updateCommonHabit(event.commonHabit)
+                saveScore(action.score)
+                updateCommonHabit(action.commonHabit)
                 getScore()
             }
 
             is MainActions.UpdateSelfAddedHabit -> {
-                saveScore(event.score)
-                updateSelfAddedHabit(event.selfAddedHabit)
+                saveScore(action.score)
+                updateSelfAddedHabit(action.selfAddedHabit)
                 getScore()
             }
 
@@ -79,7 +80,12 @@ class MainViewModel @Inject constructor(
         dispatcher = Dispatchers.IO,
         state = _mainScreenState
     ) {
-        _mainScreenState.update { it.copy(commonCommonHabits = commonHabitRepo.getAllHabits()) }
+        _mainScreenState.update {
+            it.copy(
+                commonHabits = commonHabitRepo.getAllHabits(),
+                loading = false
+            )
+        }
     }
 
     private fun updateCommonHabit(commonHabit: CommonHabit) = updateMainScreenState(
@@ -91,7 +97,8 @@ class MainViewModel @Inject constructor(
         _mainScreenState.update {
             it.copy(
                 score = it.score,
-                commonCommonHabits = commonHabitRepo.getAllHabits()
+                commonHabits = commonHabitRepo.getAllHabits(),
+                loading = false
             )
         }
     }
@@ -102,7 +109,7 @@ class MainViewModel @Inject constructor(
         state = _mainScreenState
     ) {
         _mainScreenState.update {
-            it.copy(selfAddedHabits = selfAddedHabitRepo.get().getAllHabits())
+            it.copy(selfAddedHabits = selfAddedHabitRepo.get().getAllHabits(), loading = false)
         }
     }
 
@@ -114,7 +121,7 @@ class MainViewModel @Inject constructor(
         ) {
             selfAddedHabitRepo.get().updateHabit(selfAddedHabit)
             _mainScreenState.update {
-                it.copy(selfAddedHabits = selfAddedHabitRepo.get().getAllHabits())
+                it.copy(selfAddedHabits = selfAddedHabitRepo.get().getAllHabits(), loading = false)
             }
         }
 
@@ -137,7 +144,7 @@ class MainViewModel @Inject constructor(
             tags = tags
         )
         _mainScreenState.update {
-            it.copy(selfAddedHabits = selfAddedHabitRepo.get().getAllHabits())
+            it.copy(selfAddedHabits = selfAddedHabitRepo.get().getAllHabits(), loading = false)
         }
     }
 
@@ -149,7 +156,7 @@ class MainViewModel @Inject constructor(
         ) {
             selfAddedHabitRepo.get().delete(selfAddedHabit)
             _mainScreenState.update {
-                it.copy(selfAddedHabits = selfAddedHabitRepo.get().getAllHabits())
+                it.copy(selfAddedHabits = selfAddedHabitRepo.get().getAllHabits(), loading = false)
             }
         }
 }
@@ -161,13 +168,15 @@ fun updateMainScreenState(
     useCase: suspend () -> Unit
 ) {
     scope.launch(dispatcher) {
-        state.update { it.copy(loading = true, error = null) }
+        state.update { it.copy(loading = true) }
+        Log.d("State loading", state.value.toString())
         try {
-            state.update { it.copy(loading = false) }
+            Log.d("State answer", state.value.toString())
             useCase.invoke()
         } catch (exception: Exception) {
             val message = exception.message ?: "Something went wrong"
             state.update { it.copy(loading = false, error = message) }
+            Log.d("State error", state.value.toString())
         }
     }
 }

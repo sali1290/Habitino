@@ -5,7 +5,7 @@ import com.sali.habitino.model.dto.SelfAddedHabit
 
 data class MainScreenState(
     val score: Int = 0,
-    val commonCommonHabits: List<CommonHabit> = emptyList(),
+    val commonHabits: List<CommonHabit>? = null,
     val selfAddedHabits: List<SelfAddedHabit> = emptyList(),
     val loading: Boolean = false,
     val error: String? = null,

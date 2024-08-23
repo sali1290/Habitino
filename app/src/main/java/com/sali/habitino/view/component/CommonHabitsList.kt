@@ -14,6 +14,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -24,47 +25,58 @@ import androidx.compose.ui.unit.sp
 import com.sali.habitino.R
 import com.sali.habitino.viewmodel.main.MainActions
 import com.sali.habitino.viewmodel.main.MainScreenState
-import com.sali.habitino.viewmodel.main.MainViewModel
 import java.time.LocalDateTime
 
 @Composable
-fun RemoteHabitsList(
-    mainViewModel: MainViewModel,
-    screenState: MainScreenState
+fun CommonHabitsList(
+    screenState: MainScreenState,
+    onAction: (MainActions) -> Unit
 ) {
+    LaunchedEffect(key1 = Unit) {
+        onAction(MainActions.GetCommonHabits)
+    }
     Scaffold(
         contentWindowInsets = WindowInsets(left = 10.dp, top = 0.dp, right = 10.dp, bottom = 0.dp)
     ) { innerPadding ->
 
-        if (screenState.loading)
-            ProgressBar()
+        when {
+            screenState.loading -> ProgressBar()
 
-        if (screenState.commonCommonHabits.isNotEmpty())
-            HabitList(
-                mainViewModel = mainViewModel,
-                screenState = screenState,
-                modifier = Modifier.padding(innerPadding)
-            )
-
-        if (!screenState.error.isNullOrEmpty())
-            ErrorMessage(message = screenState.error) {
-                mainViewModel.onAction(MainActions.GetCommonHabits)
+            !screenState.commonHabits.isNullOrEmpty() -> {
+                HabitList(
+                    screenState = screenState,
+                    onAction = onAction,
+                    modifier = Modifier.padding(innerPadding)
+                )
             }
+
+            screenState.commonHabits == null -> {
+                ErrorMessage(message = stringResource(id = R.string.something_went_wrong_please_try_again)) {
+                    onAction(MainActions.GetCommonHabits)
+                }
+            }
+
+            !screenState.error.isNullOrEmpty() -> {
+                ErrorMessage(message = screenState.error) {
+                    onAction(MainActions.GetCommonHabits)
+                }
+            }
+        }
 
     }
 }
 
 @Composable
 private fun HabitList(
-    mainViewModel: MainViewModel,
     screenState: MainScreenState,
+    onAction: (MainActions) -> Unit,
     modifier: Modifier
 ) {
     val tagsList = remember { mutableStateListOf<String>() }
     Column(modifier = Modifier.fillMaxSize()) {
         TagSelector(tagsList = tagsList)
         LazyColumn(modifier = modifier) {
-            itemsIndexed(screenState.commonCommonHabits) { _, item ->
+            itemsIndexed(screenState.commonHabits ?: emptyList()) { _, item ->
                 if (item.tags.names.containsAll(tagsList))
                     HabitItem(
                         title = item.title,
@@ -79,7 +91,7 @@ private fun HabitList(
                             lastCompletedDate = LocalDateTime.now()
                         )
                         val newScore = if (!item.isCompleted) 1 else -1
-                        mainViewModel.onAction(
+                        onAction(
                             MainActions.UpdateCommonHabit(
                                 score = screenState.score + newScore,
                                 commonHabit = updatedItem

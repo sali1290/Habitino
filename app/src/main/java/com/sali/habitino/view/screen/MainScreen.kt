@@ -27,8 +27,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sali.habitino.R
+import com.sali.habitino.view.component.CommonHabitsList
 import com.sali.habitino.view.component.HabitTypeItem
-import com.sali.habitino.view.component.RemoteHabitsList
 import com.sali.habitino.view.component.SelfAddedHabitsList
 import com.sali.habitino.view.theme.LightBlue
 import com.sali.habitino.viewmodel.main.MainActions
@@ -42,8 +42,6 @@ fun MainHabitScreen(mainViewModel: MainViewModel = hiltViewModel()) {
     val mainScreenState by mainViewModel.mainScreenState.collectAsStateWithLifecycle()
     LaunchedEffect(key1 = Unit) {
         mainViewModel.onAction(MainActions.GetScore)
-        mainViewModel.onAction(MainActions.GetCommonHabits)
-        mainViewModel.onAction(MainActions.GetSelfAddedHabits)
     }
 
     Column(
@@ -68,7 +66,7 @@ fun MainHabitScreen(mainViewModel: MainViewModel = hiltViewModel()) {
         HorizontalPager(state = pagerState) { page ->
             when (page) {
                 0 -> {
-                    RemoteHabitsList(mainViewModel, mainScreenState)
+                    CommonHabitsList(mainScreenState, mainViewModel::onAction)
                 }
 
                 1 -> {
