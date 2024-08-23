@@ -70,7 +70,7 @@ fun MainHabitScreen(mainViewModel: MainViewModel = hiltViewModel()) {
                 }
 
                 1 -> {
-                    SelfAddedHabitsList(mainViewModel, mainScreenState)
+                    SelfAddedHabitsList(mainScreenState, mainViewModel::onAction)
                 }
             }
         }

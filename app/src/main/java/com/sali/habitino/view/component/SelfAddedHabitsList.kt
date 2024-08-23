@@ -24,15 +24,14 @@ import androidx.compose.ui.unit.dp
 import com.sali.habitino.R
 import com.sali.habitino.viewmodel.main.MainActions
 import com.sali.habitino.viewmodel.main.MainScreenState
-import com.sali.habitino.viewmodel.main.MainViewModel
 import java.time.LocalDateTime
 
 @Composable
-fun SelfAddedHabitsList(mainViewModel: MainViewModel, screenState: MainScreenState) {
+fun SelfAddedHabitsList(screenState: MainScreenState, onAction: (MainActions) -> Unit) {
 
     var showAddHabitDialog by remember { mutableStateOf(false) }
     LaunchedEffect(key1 = Unit) {
-        mainViewModel.onAction(MainActions.GetSelfAddedHabits)
+        onAction(MainActions.GetSelfAddedHabits)
     }
     if (showAddHabitDialog) {
         AddHabitDialog(
@@ -40,7 +39,7 @@ fun SelfAddedHabitsList(mainViewModel: MainViewModel, screenState: MainScreenSta
                 showAddHabitDialog = false
             },
             onConfirmRequest = { title, description, solution, state, tags ->
-                mainViewModel.onAction(
+                onAction(
                     MainActions.AddHabit(
                         title,
                         description,
@@ -62,8 +61,8 @@ fun SelfAddedHabitsList(mainViewModel: MainViewModel, screenState: MainScreenSta
         contentWindowInsets = WindowInsets(left = 10.dp, top = 0.dp, right = 10.dp, bottom = 0.dp)
     ) { innerPadding ->
         HabitList(
-            mainViewModel = mainViewModel,
             screenState = screenState,
+            onAction = onAction,
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -71,7 +70,7 @@ fun SelfAddedHabitsList(mainViewModel: MainViewModel, screenState: MainScreenSta
 
 @Composable
 private fun HabitList(
-    mainViewModel: MainViewModel, screenState: MainScreenState, modifier: Modifier
+    screenState: MainScreenState, onAction: (MainActions) -> Unit, modifier: Modifier
 ) {
     val tagsList = remember { mutableStateListOf<String>() }
     Column(modifier = Modifier.fillMaxSize()) {
@@ -80,7 +79,7 @@ private fun HabitList(
             itemsIndexed(screenState.selfAddedHabits) { _, item ->
                 HabitItem(
                     selfAdded = true,
-                    onDeleteClick = { mainViewModel.onAction(MainActions.DeleteHabit(item)) },
+                    onDeleteClick = { onAction(MainActions.DeleteHabit(item)) },
                     title = item.title,
                     description = item.description,
                     solution = item.solution,
@@ -93,7 +92,7 @@ private fun HabitList(
                         lastCompletedDate = LocalDateTime.now()
                     )
                     val newScore = if (!item.isCompleted) 1 else -1
-                    mainViewModel.onAction(
+                    onAction(
                         MainActions.UpdateSelfAddedHabit(
                             score = screenState.score + newScore,
                             selfAddedHabit = updatedItem
