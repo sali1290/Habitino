@@ -1,4 +1,4 @@
-package com.sali.habitino.model.utils
+package com.sali.habitino.model.utile
 
 import android.content.Context
 import dagger.hilt.android.qualifiers.ApplicationContext

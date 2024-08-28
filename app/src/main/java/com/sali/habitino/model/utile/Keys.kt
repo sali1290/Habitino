@@ -1,4 +1,4 @@
-package com.sali.habitino.model.utils
+package com.sali.habitino.model.utile
 
 object Keys {
 
