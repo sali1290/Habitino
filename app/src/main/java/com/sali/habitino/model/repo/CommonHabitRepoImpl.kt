@@ -7,11 +7,11 @@ import com.sali.habitino.R
 import com.sali.habitino.model.db.HabitDao
 import com.sali.habitino.model.dto.CommonHabit
 import com.sali.habitino.model.dto.Tags
-import com.sali.habitino.model.utils.ConnectivityManager
-import com.sali.habitino.model.utils.DataSource
-import com.sali.habitino.model.utils.Keys
-import com.sali.habitino.model.utils.SharedPrefUtils
-import com.sali.habitino.model.utils.TagKeys
+import com.sali.habitino.model.utile.ConnectivityManager
+import com.sali.habitino.model.utile.DataSource
+import com.sali.habitino.model.utile.Keys
+import com.sali.habitino.model.utile.SharedPrefUtils
+import com.sali.habitino.model.utile.TagKeys
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.tasks.await
 import java.io.IOException

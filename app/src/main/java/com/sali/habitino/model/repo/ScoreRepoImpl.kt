@@ -1,6 +1,6 @@
 package com.sali.habitino.model.repo
 
-import com.sali.habitino.model.utils.SharedPrefUtils
+import com.sali.habitino.model.utile.SharedPrefUtils
 import javax.inject.Inject
 
 class ScoreRepoImpl @Inject constructor(
