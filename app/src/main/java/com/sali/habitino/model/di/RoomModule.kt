@@ -30,4 +30,9 @@ class RoomModule {
     @Provides
     @Singleton
     fun provideHabitDao(appDatabase: AppDatabase) = appDatabase.habitDao()
+
+    @Provides
+    @Singleton
+    fun provideAppDao(appDatabase: AppDatabase) = appDatabase.appDao()
+
 }
