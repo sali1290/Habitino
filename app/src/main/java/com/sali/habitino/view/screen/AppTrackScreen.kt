@@ -1,6 +1,5 @@
 package com.sali.habitino.view.screen
 
-import android.graphics.drawable.Drawable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -26,6 +25,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.sali.habitino.model.dto.AppModel
 import com.sali.habitino.view.component.AppItem
 
 
@@ -91,10 +91,3 @@ fun AppTrackScreen(navController: NavController) {
     }
 
 }
-
-data class AppModel(
-    val name: String,
-    val appIcon: Drawable,
-    val status: Int, // If status is 0 then app has a message
-    val packageName: String
-)

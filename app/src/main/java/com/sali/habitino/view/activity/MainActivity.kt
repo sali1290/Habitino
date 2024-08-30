@@ -1,4 +1,4 @@
-package com.sali.habitino.view
+package com.sali.habitino.view.activity
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -13,11 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.sali.habitino.view.screen.AddAppScreen
+import com.sali.habitino.view.screen.AppTrackScreen
 import com.sali.habitino.view.screen.MainHabitScreen
 import com.sali.habitino.view.screen.Screens
 import com.sali.habitino.view.theme.HabitinoTheme
 import com.sali.habitino.viewmodel.HabitStatesViewModel
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -30,6 +33,14 @@ class MainActivity : ComponentActivity() {
         habitStateViewMode.checkAllHabitsState()
         setContent {
             HabitinoTheme {
+//                        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+//                        startActivity(intent)
+//                        val intent = Intent(
+//                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse(
+//                                "package:$packageName"
+//                            )
+//                        )
+//                AllApplicationsScreen()
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     HabitinoNavHost(modifier = Modifier.padding(innerPadding))
                 }
@@ -43,11 +54,17 @@ fun HabitinoNavHost(modifier: Modifier) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = Screens.MainHabitScreen.route,
+        startDestination = Screens.AppTrackScreen.route,
         modifier = modifier
     ) {
         composable(Screens.MainHabitScreen.route) {
             MainHabitScreen()
+        }
+        composable(Screens.AppTrackScreen.route) {
+            AppTrackScreen(navController)
+        }
+        composable(Screens.AddAppScreen.route) {
+            AddAppScreen()
         }
     }
 }

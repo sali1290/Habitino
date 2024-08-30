@@ -4,10 +4,12 @@ import com.sali.habitino.model.dto.AppModel
 
 interface AppTrackRepo {
 
-    suspend fun getAllApps(): List<AppModel>
+    suspend fun getAllInstalledApps(): List<AppModel>
 
-    suspend fun updateAppState(appModel: AppModel)
-
-    suspend fun deleteApp(appModel: AppModel)
+//    suspend fun getAllSavedApps(): List<AppModel>
+//
+//    suspend fun updateAppState(appModel: AppModel)
+//
+//    suspend fun deleteApp(appModel: AppModel)
 
 }
