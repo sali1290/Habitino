@@ -10,7 +10,6 @@ import com.sali.habitino.model.repo.CommonHabitRepo
 import com.sali.habitino.model.repo.ScoreRepo
 import com.sali.habitino.model.repo.SelfAddedHabitRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -78,7 +77,6 @@ class MainViewModel @Inject constructor(
 
     private fun getCommonHabits() = updateMainScreenState(
         scope = viewModelScope,
-        dispatcher = Dispatchers.IO,
         state = _mainScreenState
     ) {
         _mainScreenState.update {
@@ -91,7 +89,6 @@ class MainViewModel @Inject constructor(
 
     private fun updateCommonHabit(commonHabit: CommonHabit) = updateMainScreenState(
         scope = viewModelScope,
-        dispatcher = Dispatchers.IO,
         state = _mainScreenState
     ) {
         commonHabitRepo.updateHabit(commonHabit)
@@ -106,7 +103,6 @@ class MainViewModel @Inject constructor(
 
     private fun getSelfAddedHabits() = updateMainScreenState(
         scope = viewModelScope,
-        dispatcher = Dispatchers.IO,
         state = _mainScreenState
     ) {
         _mainScreenState.update {
@@ -120,7 +116,6 @@ class MainViewModel @Inject constructor(
     private fun updateSelfAddedHabit(selfAddedHabit: SelfAddedHabit) =
         updateMainScreenState(
             scope = viewModelScope,
-            dispatcher = Dispatchers.IO,
             state = _mainScreenState
         ) {
             selfAddedHabitRepo.get().updateHabit(selfAddedHabit)
@@ -140,7 +135,6 @@ class MainViewModel @Inject constructor(
         tags: List<String>
     ) = updateMainScreenState(
         scope = viewModelScope,
-        dispatcher = Dispatchers.IO,
         state = _mainScreenState
     ) {
         selfAddedHabitRepo.get().insert(
@@ -161,7 +155,6 @@ class MainViewModel @Inject constructor(
     private fun deleteSelfAddedHabit(selfAddedHabit: SelfAddedHabit) =
         updateMainScreenState(
             scope = viewModelScope,
-            dispatcher = Dispatchers.IO,
             state = _mainScreenState
         ) {
             selfAddedHabitRepo.get().delete(selfAddedHabit)
@@ -174,13 +167,12 @@ class MainViewModel @Inject constructor(
         }
 }
 
-fun updateMainScreenState(
+private fun updateMainScreenState(
     scope: CoroutineScope,
-    dispatcher: CoroutineDispatcher = Dispatchers.IO,
     state: MutableStateFlow<MainScreenState>,
     useCase: suspend () -> Unit
 ) {
-    scope.launch(dispatcher) {
+    scope.launch(Dispatchers.IO) {
         state.update { it.copy(loading = true) }
         Log.d("State loading", state.value.toString())
         try {
