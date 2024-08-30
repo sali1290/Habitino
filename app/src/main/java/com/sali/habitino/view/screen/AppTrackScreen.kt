@@ -35,7 +35,7 @@ fun AppTrackScreen(navController: NavController) {
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { navController.navigate(Screens.AddAppScreen.route) }) {
+            FloatingActionButton(onClick = { navController.navigate(Screens.InstalledAppScreen.route) }) {
                 Row(
                     modifier = Modifier.padding(horizontal = 10.dp),
                     verticalAlignment = Alignment.CenterVertically

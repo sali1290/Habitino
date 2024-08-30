@@ -27,7 +27,7 @@ import com.sali.habitino.viewmodel.installedapps.InstalledAppsViewModel
 
 
 @Composable
-fun AddAppScreen(installedAppsViewModel: InstalledAppsViewModel = hiltViewModel()) {
+fun InstalledAppScreen(installedAppsViewModel: InstalledAppsViewModel = hiltViewModel()) {
     val savedApps = remember { mutableStateListOf<AppModel>() }
     val installedAppsState by installedAppsViewModel.installedAppsState.collectAsStateWithLifecycle()
     LaunchedEffect(key1 = Unit) {
