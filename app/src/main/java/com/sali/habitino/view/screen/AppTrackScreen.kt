@@ -32,7 +32,6 @@ import com.sali.habitino.view.component.AppItem
 @Composable
 fun AppTrackScreen(navController: NavController) {
     val savedApps = remember { mutableStateListOf<AppModel>() }
-
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = { navController.navigate(Screens.InstalledAppScreen.route) }) {
@@ -65,10 +64,13 @@ fun AppTrackScreen(navController: NavController) {
                     name = it.name,
                     initialCheck = savedApps.contains(it)
                 ) { isChecked ->
-                    if (isChecked)
+                    if (isChecked) {
+                        it.status = 1
                         savedApps.add(it)
-                    else
+                    } else {
+                        it.status = 0
                         savedApps.remove(it)
+                    }
                 }
                 Spacer(
                     modifier = Modifier

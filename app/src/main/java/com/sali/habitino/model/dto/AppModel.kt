@@ -5,16 +5,18 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-//@Entity
+@Entity
 data class AppModel(
-//    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey(autoGenerate = true)
     val id: Int,
 
     val name: String,
 
-//    @ColumnInfo(name = "app_icon")
+    @ColumnInfo(name = "app_icon", typeAffinity = ColumnInfo.BLOB)
     val appIcon: Drawable,
 
-//    @ColumnInfo(name = "package_name")
+    var status: Int, // if equals to 1 that means app is saved
+
+    @ColumnInfo(name = "package_name")
     val packageName: String
 )

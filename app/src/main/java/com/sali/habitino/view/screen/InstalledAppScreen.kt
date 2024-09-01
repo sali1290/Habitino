@@ -32,6 +32,13 @@ fun InstalledAppScreen(installedAppsViewModel: InstalledAppsViewModel = hiltView
     val installedAppsState by installedAppsViewModel.installedAppsState.collectAsStateWithLifecycle()
     LaunchedEffect(key1 = Unit) {
         installedAppsViewModel.onAction(InstalledAppsAction.GetAllInstalledApps)
+        installedAppsViewModel.onAction(InstalledAppsAction.GetSavedApps)
+    }
+
+    LaunchedEffect(installedAppsState.savedApps) {
+        if (installedAppsState.savedApps.isNotEmpty()) {
+            savedApps.addAll(installedAppsState.savedApps)
+        }
     }
 
     if (installedAppsState.installedApps.isEmpty()) {
@@ -44,12 +51,24 @@ fun InstalledAppScreen(installedAppsViewModel: InstalledAppsViewModel = hiltView
                 AppItem(
                     icon = it.appIcon,
                     name = it.name,
-                    initialCheck = savedApps.contains(it)
+                    initialCheck = it.status == 1
                 ) { isChecked ->
-                    if (isChecked)
+                    if (isChecked) {
+                        installedAppsViewModel.onAction(InstalledAppsAction.AddApp(it))
+                        it.status = 1
                         savedApps.add(it)
-                    else
+                    } else {
+                        savedApps.forEach { savedApp ->
+                            if (it.packageName == savedApp.packageName)
+                                installedAppsViewModel.onAction(
+                                    InstalledAppsAction.RemoveApp(
+                                        savedApp
+                                    )
+                                )
+                        }
+                        it.status = 0
                         savedApps.remove(it)
+                    }
                 }
                 Spacer(
                     modifier = Modifier
