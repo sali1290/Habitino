@@ -16,24 +16,24 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AppTrackViewModel @Inject constructor(private val appTrackRepo: AppTrackRepo) :
+class TrackingAppsViewModel @Inject constructor(private val appTrackRepo: AppTrackRepo) :
     ViewModel() {
 
-    private val _appTrackState = MutableStateFlow(AppTrackScreenState())
-    val appTrackState: StateFlow<AppTrackScreenState>
-        get() = _appTrackState
+    private val _trackingAppsState = MutableStateFlow(TrackingAppsState())
+    val trackingAppsState: StateFlow<TrackingAppsState>
+        get() = _trackingAppsState
 
-    fun onAction(action: AppTrackAction) {
+    fun onAction(action: TrackingAppsAction) {
         when (action) {
-            is AppTrackAction.GetSavedApps -> getSavedApps()
-            is AppTrackAction.AddApp -> addApp(action.appModel)
-            is AppTrackAction.RemoveApp -> removeApp(action.appModel)
+            is TrackingAppsAction.GetSavedApps -> getSavedApps()
+            is TrackingAppsAction.AddApp -> addApp(action.appModel)
+            is TrackingAppsAction.RemoveApp -> removeApp(action.appModel)
         }
     }
 
     private fun getSavedApps() =
-        updateAppTrackScreenState(scope = viewModelScope, state = _appTrackState) {
-            _appTrackState.update {
+        updateAppTrackScreenState(scope = viewModelScope, state = _trackingAppsState) {
+            _trackingAppsState.update {
                 it.copy(savedApps = appTrackRepo.getAllSavedApps().toMutableStateList())
             }
         }
@@ -50,7 +50,7 @@ class AppTrackViewModel @Inject constructor(private val appTrackRepo: AppTrackRe
 
 private fun updateAppTrackScreenState(
     scope: CoroutineScope,
-    state: MutableStateFlow<AppTrackScreenState>,
+    state: MutableStateFlow<TrackingAppsState>,
     useCase: suspend () -> Unit
 ) {
     scope.launch(Dispatchers.IO) {

@@ -31,19 +31,19 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.sali.habitino.model.dto.AppModel
 import com.sali.habitino.view.component.AppItem
-import com.sali.habitino.viewmodel.apptrack.AppTrackAction
-import com.sali.habitino.viewmodel.apptrack.AppTrackViewModel
+import com.sali.habitino.viewmodel.apptrack.TrackingAppsAction
+import com.sali.habitino.viewmodel.apptrack.TrackingAppsViewModel
 
 
 @Composable
 fun AppTrackScreen(
     navController: NavController,
-    appTrackViewModel: AppTrackViewModel = hiltViewModel()
+    trackingAppsViewModel: TrackingAppsViewModel = hiltViewModel()
 ) {
     val savedApps = remember { mutableStateListOf<AppModel>() }
-    val appTrackState by appTrackViewModel.appTrackState.collectAsStateWithLifecycle()
+    val trackingAppsState by trackingAppsViewModel.trackingAppsState.collectAsStateWithLifecycle()
     LaunchedEffect(key1 = Unit) {
-        appTrackViewModel.onAction(AppTrackAction.GetSavedApps)
+        trackingAppsViewModel.onAction(TrackingAppsAction.GetSavedApps)
     }
     Scaffold(
         floatingActionButton = {
@@ -71,18 +71,18 @@ fun AppTrackScreen(
                 Spacer(modifier = Modifier.height(20.dp))
             }
 
-            items(appTrackState.savedApps) {
+            items(trackingAppsState.savedApps) {
                 AppItem(
                     icon = it.appIcon,
                     name = it.name,
                     initialCheck = it.status == 1
                 ) { isChecked ->
                     if (isChecked) {
-                        appTrackViewModel.onAction(AppTrackAction.AddApp(it))
+                        trackingAppsViewModel.onAction(TrackingAppsAction.AddApp(it))
                         it.status = 1
                         savedApps.add(it)
                     } else {
-                        appTrackViewModel.onAction(AppTrackAction.RemoveApp(it))
+                        trackingAppsViewModel.onAction(TrackingAppsAction.RemoveApp(it))
                         it.status = 0
                         savedApps.remove(it)
                     }
