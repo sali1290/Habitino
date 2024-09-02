@@ -17,6 +17,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -24,14 +26,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.sali.habitino.model.dto.AppModel
 import com.sali.habitino.view.component.AppItem
+import com.sali.habitino.viewmodel.apptrack.AppTrackAction
+import com.sali.habitino.viewmodel.apptrack.AppTrackViewModel
 
 
 @Composable
-fun AppTrackScreen(navController: NavController) {
+fun AppTrackScreen(
+    navController: NavController,
+    appTrackViewModel: AppTrackViewModel = hiltViewModel()
+) {
     val savedApps = remember { mutableStateListOf<AppModel>() }
+    val appTrackState by appTrackViewModel.appTrackState.collectAsStateWithLifecycle()
+    LaunchedEffect(key1 = Unit) {
+        appTrackViewModel.onAction(AppTrackAction.GetSavedApps)
+    }
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = { navController.navigate(Screens.InstalledAppScreen.route) }) {
@@ -58,16 +71,18 @@ fun AppTrackScreen(navController: NavController) {
                 Spacer(modifier = Modifier.height(20.dp))
             }
 
-            items(savedApps) {
+            items(appTrackState.savedApps) {
                 AppItem(
                     icon = it.appIcon,
                     name = it.name,
-                    initialCheck = savedApps.contains(it)
+                    initialCheck = it.status == 1
                 ) { isChecked ->
                     if (isChecked) {
+                        appTrackViewModel.onAction(AppTrackAction.AddApp(it))
                         it.status = 1
                         savedApps.add(it)
                     } else {
+                        appTrackViewModel.onAction(AppTrackAction.RemoveApp(it))
                         it.status = 0
                         savedApps.remove(it)
                     }
