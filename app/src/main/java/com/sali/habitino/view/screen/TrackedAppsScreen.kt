@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
@@ -19,8 +19,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,7 +27,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.sali.habitino.model.dto.AppModel
 import com.sali.habitino.view.component.AppItem
 import com.sali.habitino.viewmodel.apptrack.TrackingAppsAction
 import com.sali.habitino.viewmodel.apptrack.TrackingAppsViewModel
@@ -40,7 +37,6 @@ fun AppTrackScreen(
     navController: NavController,
     trackingAppsViewModel: TrackingAppsViewModel = hiltViewModel()
 ) {
-    val savedApps = remember { mutableStateListOf<AppModel>() }
     val trackingAppsState by trackingAppsViewModel.trackingAppsState.collectAsStateWithLifecycle()
     LaunchedEffect(key1 = Unit) {
         trackingAppsViewModel.onAction(TrackingAppsAction.GetSavedApps)
@@ -71,21 +67,16 @@ fun AppTrackScreen(
                 Spacer(modifier = Modifier.height(20.dp))
             }
 
-            items(trackingAppsState.savedApps) {
+            itemsIndexed(trackingAppsState.savedApps) { _, item ->
                 AppItem(
-                    icon = it.appIcon,
-                    name = it.name,
-                    initialCheck = it.status == 1
+                    icon = item.appIcon,
+                    name = item.name,
+                    initialCheck = trackingAppsState.savedApps.contains(item)
                 ) { isChecked ->
-                    if (isChecked) {
-                        trackingAppsViewModel.onAction(TrackingAppsAction.AddApp(it))
-                        it.status = 1
-                        savedApps.add(it)
-                    } else {
-                        trackingAppsViewModel.onAction(TrackingAppsAction.RemoveApp(it))
-                        it.status = 0
-                        savedApps.remove(it)
-                    }
+                    if (isChecked)
+                        trackingAppsViewModel.onAction(TrackingAppsAction.AddApp(item))
+                    else
+                        trackingAppsViewModel.onAction(TrackingAppsAction.RemoveApp(item))
                 }
                 Spacer(
                     modifier = Modifier

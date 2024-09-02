@@ -1,6 +1,6 @@
 package com.sali.habitino.viewmodel.installedapps
 
-import com.sali.habitino.model.dto.AppModel
+import com.sali.habitino.model.dto.SavedApp
 
 sealed interface InstalledAppsAction {
 
@@ -8,8 +8,8 @@ sealed interface InstalledAppsAction {
 
     data object GetSavedApps : InstalledAppsAction
 
-    data class AddApp(val appModel: AppModel) : InstalledAppsAction
+    data class AddApp(val savedApp: SavedApp) : InstalledAppsAction
 
-    data class RemoveApp(val appModel: AppModel) : InstalledAppsAction
+    data class RemoveApp(val savedApp: SavedApp) : InstalledAppsAction
 
 }

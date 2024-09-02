@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sali.habitino.model.dto.AppModel
-import com.sali.habitino.model.repo.AppTrackRepo
+import com.sali.habitino.model.dto.SavedApp
+import com.sali.habitino.model.repo.AppsRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TrackingAppsViewModel @Inject constructor(private val appTrackRepo: AppTrackRepo) :
+class TrackingAppsViewModel @Inject constructor(private val appsRepo: AppsRepo) :
     ViewModel() {
 
     private val _trackingAppsState = MutableStateFlow(TrackingAppsState())
@@ -26,24 +26,24 @@ class TrackingAppsViewModel @Inject constructor(private val appTrackRepo: AppTra
     fun onAction(action: TrackingAppsAction) {
         when (action) {
             is TrackingAppsAction.GetSavedApps -> getSavedApps()
-            is TrackingAppsAction.AddApp -> addApp(action.appModel)
-            is TrackingAppsAction.RemoveApp -> removeApp(action.appModel)
+            is TrackingAppsAction.AddApp -> addApp(action.savedApp)
+            is TrackingAppsAction.RemoveApp -> removeApp(action.savedApp)
         }
     }
 
     private fun getSavedApps() =
         updateAppTrackScreenState(scope = viewModelScope, state = _trackingAppsState) {
             _trackingAppsState.update {
-                it.copy(savedApps = appTrackRepo.getAllSavedApps().toMutableStateList())
+                it.copy(savedApps = appsRepo.getAllSavedApps().toMutableStateList())
             }
         }
 
-    private fun addApp(appModel: AppModel) = viewModelScope.launch(Dispatchers.IO) {
-        appTrackRepo.addApp(appModel)
+    private fun addApp(savedApp: SavedApp) = viewModelScope.launch(Dispatchers.IO) {
+        appsRepo.addApp(savedApp)
     }
 
-    private fun removeApp(appModel: AppModel) = viewModelScope.launch(Dispatchers.IO) {
-        appTrackRepo.removeApp(appModel)
+    private fun removeApp(savedApp: SavedApp) = viewModelScope.launch(Dispatchers.IO) {
+        appsRepo.removeApp(savedApp)
     }
 
 }

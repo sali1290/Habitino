@@ -25,6 +25,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.sali.habitino.model.dto.SavedApp
 import com.sali.habitino.view.component.AppItem
 import com.sali.habitino.viewmodel.installedapps.InstalledAppsAction
 import com.sali.habitino.viewmodel.installedapps.InstalledAppsViewModel
@@ -82,8 +83,14 @@ fun InstalledAppScreen(installedAppsViewModel: InstalledAppsViewModel = hiltView
                         initialCheck = savedApps.contains(it.packageName)
                     ) { isChecked ->
                         if (isChecked) {
-                            installedAppsViewModel.onAction(InstalledAppsAction.AddApp(it))
-                            it.status = 1
+                            val savedApp = SavedApp(
+                                id = 0,
+                                name = it.name,
+                                appIcon = it.appIcon,
+                                packageName = it.packageName,
+                                message = ""
+                            )
+                            installedAppsViewModel.onAction(InstalledAppsAction.AddApp(savedApp))
                             savedApps.add(it.packageName)
                         } else {
                             installedAppsState.savedApps.forEach { savedApp ->
@@ -94,7 +101,6 @@ fun InstalledAppScreen(installedAppsViewModel: InstalledAppsViewModel = hiltView
                                         )
                                     )
                             }
-                            it.status = 0
                             savedApps.remove(it.packageName)
                         }
                     }

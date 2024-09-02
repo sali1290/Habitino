@@ -1,7 +1,7 @@
 package com.sali.habitino.model.di
 
-import com.sali.habitino.model.repo.AppTrackRepo
-import com.sali.habitino.model.repo.AppTrackRepoImpl
+import com.sali.habitino.model.repo.AppsRepo
+import com.sali.habitino.model.repo.AppsRepoImpl
 import com.sali.habitino.model.repo.HabitStateRepo
 import com.sali.habitino.model.repo.HabitStateRepoImpl
 import com.sali.habitino.model.repo.CommonHabitRepo
@@ -38,5 +38,5 @@ interface RepoModule {
 
     @Binds
     @Singleton
-    fun bindAppTrackRepo(appTrackRepoImpl: AppTrackRepoImpl): AppTrackRepo
+    fun bindAppTrackRepo(appTrackRepoImpl: AppsRepoImpl): AppsRepo
 }

@@ -33,6 +33,6 @@ class RoomModule {
 
     @Provides
     @Singleton
-    fun provideAppDao(appDatabase: AppDatabase) = appDatabase.appTrackDao()
+    fun provideAppDao(appDatabase: AppDatabase) = appDatabase.savedAppDao()
 
 }
