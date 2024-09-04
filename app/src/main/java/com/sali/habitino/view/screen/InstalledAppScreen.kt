@@ -17,7 +17,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,6 +29,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sali.habitino.model.dto.SavedApp
 import com.sali.habitino.view.component.AppItem
+import com.sali.habitino.view.component.SaveMessageDialog
 import com.sali.habitino.viewmodel.installedapps.InstalledAppsAction
 import com.sali.habitino.viewmodel.installedapps.InstalledAppsViewModel
 
@@ -35,6 +38,23 @@ import com.sali.habitino.viewmodel.installedapps.InstalledAppsViewModel
 fun InstalledAppScreen(installedAppsViewModel: InstalledAppsViewModel = hiltViewModel()) {
     val savedApps = remember { mutableStateListOf<String>() }
     val installedAppsState by installedAppsViewModel.installedAppsState.collectAsStateWithLifecycle()
+
+    var savedApp by remember { mutableStateOf<SavedApp?>(null) }
+    var showSaveMessage by remember { mutableStateOf(false) }
+    if (showSaveMessage) {
+        SaveMessageDialog(
+            onCancel = { showSaveMessage = false },
+            onConfirm = { message ->
+                savedApp?.message = message
+                savedApp?.let {
+                    savedApps.add(it.packageName)
+                    installedAppsViewModel.onAction(InstalledAppsAction.AddApp(it))
+                }
+                showSaveMessage = false
+            }
+        )
+    }
+
     LaunchedEffect(key1 = Unit) {
         installedAppsViewModel.onAction(InstalledAppsAction.GetAllInstalledApps)
         installedAppsViewModel.onAction(InstalledAppsAction.GetSavedApps)
@@ -83,15 +103,14 @@ fun InstalledAppScreen(installedAppsViewModel: InstalledAppsViewModel = hiltView
                         initialCheck = savedApps.contains(it.packageName)
                     ) { isChecked ->
                         if (isChecked) {
-                            val savedApp = SavedApp(
+                            showSaveMessage = true
+                            savedApp = SavedApp(
                                 id = 0,
                                 name = it.name,
                                 appIcon = it.appIcon,
                                 packageName = it.packageName,
                                 message = ""
                             )
-                            installedAppsViewModel.onAction(InstalledAppsAction.AddApp(savedApp))
-                            savedApps.add(it.packageName)
                         } else {
                             installedAppsState.savedApps.forEach { savedApp ->
                                 if (it.packageName == savedApp.packageName)
@@ -101,6 +120,7 @@ fun InstalledAppScreen(installedAppsViewModel: InstalledAppsViewModel = hiltView
                                         )
                                     )
                             }
+                            savedApp = null
                             savedApps.remove(it.packageName)
                         }
                     }
