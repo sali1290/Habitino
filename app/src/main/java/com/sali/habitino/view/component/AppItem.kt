@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -37,6 +38,7 @@ fun AppItem(
     name: String,
     message: String = "",
     initialCheck: Boolean,
+    onEditClick: () -> Unit = {},
     onCheckClick: (Boolean) -> Unit
 ) {
 
@@ -47,7 +49,7 @@ fun AppItem(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(modifier = Modifier.weight(0.9f), verticalAlignment = Alignment.CenterVertically) {
+        Row(modifier = Modifier.weight(0.7f), verticalAlignment = Alignment.CenterVertically) {
 
             Canvas(
                 modifier = Modifier
@@ -61,43 +63,53 @@ fun AppItem(
 
             Spacer(modifier = Modifier.width(10.dp))
 
-            Column(verticalArrangement = Arrangement.Center) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+            ) {
                 Text(text = name)
-                Spacer(modifier = Modifier.height(5.dp))
-                if (message.isNotEmpty()) {
-                    Text(text = message)
-                }
             }
         }
 
         Spacer(modifier = Modifier.width(5.dp))
 
         var isChecked by remember { mutableStateOf(initialCheck) }
-        IconButton(
-            onClick = {
-                isChecked = !isChecked
-                onCheckClick.invoke(isChecked)
-            },
-            modifier = Modifier
-                .weight(0.1f)
-                .border(width = 1.dp, shape = CircleShape, color = Color.LightGray)
+        Row(
+            modifier = Modifier.weight(0.3f),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Crossfade(targetState = isChecked, label = "Cross fade animation") { isChecked ->
-                if (isChecked) {
+            if (message.isNotEmpty()) {
+                IconButton(onClick = onEditClick) {
                     Icon(
-                        imageVector = Icons.Default.Check,
-                        contentDescription = "Add a note to the app",
-                        tint = Color.Blue
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Edit message",
                     )
-                } else {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Remove app's note"
-                    )
+                }
+            }
+            IconButton(
+                onClick = {
+                    isChecked = !isChecked
+                    onCheckClick.invoke(isChecked)
+                },
+                modifier = Modifier
+                    .border(width = 1.dp, shape = CircleShape, color = Color.LightGray)
+            ) {
+                Crossfade(targetState = isChecked, label = "Cross fade animation") { isChecked ->
+                    if (isChecked) {
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = "Add a note to the app",
+                            tint = Color.Blue
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = "Remove app's note"
+                        )
+                    }
                 }
             }
         }
     }
-
 
 }

@@ -30,11 +30,12 @@ import com.sali.habitino.view.theme.LightBlue
 
 @Composable
 fun SaveMessageDialog(
+    initialMessage: String = "",
     onCancel: () -> Unit,
     onConfirm: (String) -> Unit
 ) {
 
-    var message by remember { mutableStateOf("") }
+    var message by remember { mutableStateOf(initialMessage) }
     Dialog(onDismissRequest = onCancel) {
         Column(
             modifier = Modifier

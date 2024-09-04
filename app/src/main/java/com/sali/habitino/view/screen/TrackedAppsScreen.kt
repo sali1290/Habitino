@@ -19,6 +19,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,7 +30,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.sali.habitino.model.dto.SavedApp
 import com.sali.habitino.view.component.AppItem
+import com.sali.habitino.view.component.SaveMessageDialog
 import com.sali.habitino.viewmodel.apptrack.TrackingAppsAction
 import com.sali.habitino.viewmodel.apptrack.TrackingAppsViewModel
 
@@ -41,6 +46,25 @@ fun AppTrackScreen(
     LaunchedEffect(key1 = Unit) {
         trackingAppsViewModel.onAction(TrackingAppsAction.GetSavedApps)
     }
+
+    var savedApp by remember { mutableStateOf<SavedApp?>(null) }
+    var showSaveMessage by remember { mutableStateOf(false) }
+    var initialMessage by remember { mutableStateOf("") }
+    if (showSaveMessage) {
+        SaveMessageDialog(
+            initialMessage = initialMessage,
+            onCancel = { showSaveMessage = false },
+            onConfirm = { message ->
+                savedApp?.message = message
+                savedApp?.let {
+                    trackingAppsViewModel.onAction(TrackingAppsAction.AddApp(it))
+                }
+                showSaveMessage = false
+            }
+        )
+    }
+
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = { navController.navigate(Screens.InstalledAppScreen.route) }) {
@@ -71,7 +95,13 @@ fun AppTrackScreen(
                 AppItem(
                     icon = item.appIcon,
                     name = item.name,
-                    initialCheck = trackingAppsState.savedApps.contains(item)
+                    message = item.message,
+                    initialCheck = trackingAppsState.savedApps.contains(item),
+                    onEditClick = {
+                        showSaveMessage = true
+                        initialMessage = item.message
+                        savedApp = item
+                    }
                 ) { isChecked ->
                     if (isChecked)
                         trackingAppsViewModel.onAction(TrackingAppsAction.AddApp(item))
