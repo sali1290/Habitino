@@ -15,7 +15,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.sali.habitino.view.screen.AppTrackScreen
 import com.sali.habitino.view.screen.InstalledAppScreen
-import com.sali.habitino.view.screen.MainHabitScreen
 import com.sali.habitino.view.screen.Screens
 import com.sali.habitino.view.theme.HabitinoTheme
 import com.sali.habitino.viewmodel.HabitStatesViewModel
@@ -40,7 +39,6 @@ class MainActivity : ComponentActivity() {
 //                                "package:$packageName"
 //                            )
 //                        )
-//                AllApplicationsScreen()
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     HabitinoNavHost(modifier = Modifier.padding(innerPadding))
                 }
@@ -57,9 +55,9 @@ fun HabitinoNavHost(modifier: Modifier) {
         startDestination = Screens.AppTrackScreen.route,
         modifier = modifier
     ) {
-        composable(Screens.MainHabitScreen.route) {
-            MainHabitScreen()
-        }
+//        composable(Screens.MainHabitScreen.route) {
+//            MainHabitScreen()
+//        }
         composable(Screens.AppTrackScreen.route) {
             AppTrackScreen(navController)
         }
