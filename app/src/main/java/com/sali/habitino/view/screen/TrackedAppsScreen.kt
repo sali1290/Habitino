@@ -36,9 +36,8 @@ import com.sali.habitino.view.component.SaveMessageDialog
 import com.sali.habitino.viewmodel.apptrack.TrackingAppsAction
 import com.sali.habitino.viewmodel.apptrack.TrackingAppsViewModel
 
-
 @Composable
-fun AppTrackScreen(
+fun TrackedAppsScreen(
     navController: NavController,
     trackingAppsViewModel: TrackingAppsViewModel = hiltViewModel()
 ) {
@@ -67,7 +66,7 @@ fun AppTrackScreen(
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = { navController.navigate(Screens.InstalledAppScreen.route) }) {
+            FloatingActionButton(onClick = { navController.navigate(Screens.InstalledAppsScreen.route) }) {
                 Row(
                     modifier = Modifier.padding(horizontal = 10.dp),
                     verticalAlignment = Alignment.CenterVertically

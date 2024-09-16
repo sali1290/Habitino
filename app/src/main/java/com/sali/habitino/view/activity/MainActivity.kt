@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.sali.habitino.view.screen.AppTrackScreen
+import com.sali.habitino.view.screen.TrackedAppsScreen
 import com.sali.habitino.view.screen.InstalledAppScreen
 import com.sali.habitino.view.screen.Screens
 import com.sali.habitino.view.theme.HabitinoTheme
@@ -52,16 +52,16 @@ fun HabitinoNavHost(modifier: Modifier) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = Screens.AppTrackScreen.route,
+        startDestination = Screens.TrackedAppsScreen.route,
         modifier = modifier
     ) {
 //        composable(Screens.MainHabitScreen.route) {
 //            MainHabitScreen()
 //        }
-        composable(Screens.AppTrackScreen.route) {
-            AppTrackScreen(navController)
+        composable(Screens.TrackedAppsScreen.route) {
+            TrackedAppsScreen(navController)
         }
-        composable(Screens.InstalledAppScreen.route) {
+        composable(Screens.InstalledAppsScreen.route) {
             InstalledAppScreen()
         }
     }
