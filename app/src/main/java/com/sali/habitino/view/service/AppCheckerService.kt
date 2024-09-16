@@ -21,7 +21,10 @@ class AppCheckerService : AccessibilityService() {
             // Implement checking the package name of saved apps by user by the app is now open
             if (!isDialogShown) {
                 val currentTime = System.currentTimeMillis()
-                if (currentTime - lastDialogTime > dialogInterval) {
+                if (
+                    currentTime - lastDialogTime > dialogInterval &&
+                    packageName == "com.google.android.dialer"
+                ) {
                     isDialogShown = true
                     lastDialogTime = currentTime
                     showDialog()
