@@ -11,26 +11,31 @@ import android.view.accessibility.AccessibilityManager
 fun Context.checkAppPermissions(): Boolean {
 
     return when {
+        !Settings.canDrawOverlays(this) -> false
+
+        !checkAccessibilityPermission(this) -> false
+
+        else -> true
+    }
+}
+
+fun Context.grantAppRequiredPermissions() {
+    when {
         !Settings.canDrawOverlays(this) -> {
             val intent = Intent(
                 Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                 Uri.parse("package:${this.packageName}")
             )
             this.startActivity(intent)
-            false
         }
 
         !checkAccessibilityPermission(this) -> {
             val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
             this.startActivity(intent)
-            false
         }
-
-        else -> true
 
     }
 }
-
 
 private fun checkAccessibilityPermission(context: Context): Boolean {
     var isAccessibilityEnabled = false

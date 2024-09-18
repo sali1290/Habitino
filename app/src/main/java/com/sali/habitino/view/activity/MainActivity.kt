@@ -4,43 +4,51 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.sali.habitino.view.screen.TrackedAppsScreen
+import com.sali.habitino.view.component.PermissionDialog
 import com.sali.habitino.view.screen.InstalledAppScreen
 import com.sali.habitino.view.screen.Screens
+import com.sali.habitino.view.screen.TrackedAppsScreen
 import com.sali.habitino.view.theme.HabitinoTheme
-import com.sali.habitino.viewmodel.HabitStatesViewModel
+import com.sali.habitino.view.utile.checkAppPermissions
+import com.sali.habitino.view.utile.grantAppRequiredPermissions
 import dagger.hilt.android.AndroidEntryPoint
-
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val habitStateViewMode: HabitStatesViewModel by viewModels()
+//    private val habitStateViewMode: HabitStatesViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        habitStateViewMode.checkAllHabitsState()
+//        habitStateViewMode.checkAllHabitsState()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val permissionsGranted = this.checkAppPermissions()
         setContent {
             HabitinoTheme {
-//                        val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
-//                        startActivity(intent)
-//                        val intent = Intent(
-//                            Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse(
-//                                "package:$packageName"
-//                            )
-//                        )
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    HabitinoNavHost(modifier = Modifier.padding(innerPadding))
+                    val showPermissionsDialog = remember { mutableStateOf(true) }
+                    if (permissionsGranted)
+                        HabitinoNavHost(modifier = Modifier.padding(innerPadding))
+                    else
+                        PermissionDialog(
+                            isShown = showPermissionsDialog,
+                            title = "Accessibility and Overlay permissions are required for using this app. click on accept to grant those permissions.",
+                            onRejectClick = { this.finish() },
+                            onAcceptClick = { this.grantAppRequiredPermissions() })
                 }
             }
         }
@@ -66,3 +74,4 @@ fun HabitinoNavHost(modifier: Modifier) {
         }
     }
 }
+

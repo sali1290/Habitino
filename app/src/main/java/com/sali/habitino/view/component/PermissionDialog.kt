@@ -1,6 +1,5 @@
 package com.sali.habitino.view.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -25,7 +23,6 @@ import androidx.compose.ui.window.Dialog
 fun PermissionDialog(
     isShown: MutableState<Boolean>,
     title: String,
-    backgroundColor: Color = Color.LightGray,
     rejectText: String = "Reject",
     acceptText: String = "Accept",
     onRejectClick: () -> Unit,
@@ -38,9 +35,7 @@ fun PermissionDialog(
         }) {
 
             Column(
-                modifier = Modifier
-                    .background(color = backgroundColor, shape = RoundedCornerShape(10.dp))
-                    .padding(15.dp),
+                modifier = Modifier.padding(15.dp),
                 horizontalAlignment = Alignment.Start
             ) {
                 Text(modifier = Modifier.fillMaxWidth(), text = title)
@@ -55,7 +50,7 @@ fun PermissionDialog(
                         onClick = onRejectClick,
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
                     ) {
-                        Text(text = rejectText)
+                        Text(text = rejectText, color = Color.White)
                     }
                     Spacer(modifier = Modifier.width(5.dp))
                     Button(onClick = onAcceptClick) {
