@@ -1,6 +1,5 @@
 package com.sali.habitino.view.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -24,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,6 +30,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.sali.habitino.model.dto.SavedApp
 import com.sali.habitino.view.component.AppItem
+import com.sali.habitino.view.component.ListSeparator
 import com.sali.habitino.view.component.SaveMessageDialog
 import com.sali.habitino.viewmodel.apptrack.TrackingAppsAction
 import com.sali.habitino.viewmodel.apptrack.TrackingAppsViewModel
@@ -107,22 +106,7 @@ fun TrackedAppsScreen(
                     else
                         trackingAppsViewModel.onAction(TrackingAppsAction.RemoveApp(item))
                 }
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(4.dp)
-                )
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(color = Color.LightGray)
-                        .height(2.dp)
-                )
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(4.dp)
-                )
+                ListSeparator()
             }
         }
     }
