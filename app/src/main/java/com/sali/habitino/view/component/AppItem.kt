@@ -76,7 +76,7 @@ fun AppItem(
         Row(
             modifier = Modifier.weight(0.3f),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.End
         ) {
             if (message.isNotEmpty()) {
                 IconButton(onClick = onEditClick) {
