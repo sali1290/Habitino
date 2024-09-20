@@ -11,9 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.sali.habitino.R
 import com.sali.habitino.view.component.PermissionDialog
 import com.sali.habitino.view.screen.InstalledAppScreen
 import com.sali.habitino.view.screen.Screens
@@ -26,12 +28,9 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-//    private val habitStateViewMode: HabitStatesViewModel by viewModels()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-//        habitStateViewMode.checkAllHabitsState()
     }
 
     override fun onResume() {
@@ -46,7 +45,7 @@ class MainActivity : ComponentActivity() {
                     else
                         PermissionDialog(
                             isShown = showPermissionsDialog,
-                            title = "Accessibility and Overlay permissions are required for using this app. click on accept to grant those permissions.",
+                            title = stringResource(R.string.granting_permissions),
                             onRejectClick = { this.finish() },
                             onAcceptClick = { this.grantAppRequiredPermissions() })
                 }

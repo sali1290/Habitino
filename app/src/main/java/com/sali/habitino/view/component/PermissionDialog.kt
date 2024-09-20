@@ -16,15 +16,17 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.sali.habitino.R
 
 @Composable
 fun PermissionDialog(
     isShown: MutableState<Boolean>,
     title: String,
-    rejectText: String = "Reject",
-    acceptText: String = "Accept",
+    rejectText: String = stringResource(R.string.reject),
+    acceptText: String = stringResource(R.string.accept),
     onRejectClick: () -> Unit,
     onAcceptClick: () -> Unit
 ) {

@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Habitino</string>
-    <string name="habits_list">Habits list</string>
     <string name="your_score">Your score: %1$s</string>
     <string name="is_it_completed_or_not">Is it completed or not</string>
     <string name="delete_habit">Delete habit</string>
@@ -23,4 +22,16 @@
     <string name="something_went_wrong_please_try_again">Something went wrong, please try again</string>
     <string name="search_by_tag">Search by tag</string>
     <string name="please_check_your_internet_connection">Please check your internet connection</string>
+    <string name="granting_permissions">Accessibility and Overlay permissions are required for using this app. click on accept to grant those permissions.</string>
+    <string name="installed_apps">Installed apps</string>
+    <string name="add_new_app">Add new app</string>
+    <string name="be_aware">Be aware!</string>
+    <string name="tracked_apps">Tracked apps</string>
+    <string name="ok">OK</string>
+    <string name="edit_message">Edit message</string>
+    <string name="add_a_note_to_the_app">Add a note to the app</string>
+    <string name="remove_app_s_note">Remove app\'s note</string>
+    <string name="reject">Reject</string>
+    <string name="accept">Accept</string>
+    <string name="add_note_placeholder">Please add a note. This note is going to be shown whenever you open this app.</string>
 </resources>

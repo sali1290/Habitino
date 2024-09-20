@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.util.Log
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
+import com.sali.habitino.R
 import com.sali.habitino.model.dto.SavedApp
 import com.sali.habitino.model.repo.AppsRepo
 import com.sali.habitino.view.utile.LogKeys
@@ -50,9 +51,9 @@ class AppCheckerService : AccessibilityService() {
 
     private fun showDialog(message: String) {
         val builder = AlertDialog.Builder(applicationContext)
-        builder.setTitle("Be aware!")
+        builder.setTitle(getString(R.string.be_aware))
             .setMessage(message)
-            .setPositiveButton("OK") { _, _ ->
+            .setPositiveButton(getString(R.string.ok)) { _, _ ->
                 isDialogShown = false // Reset the flag when the dialog is dismissed
             }
 

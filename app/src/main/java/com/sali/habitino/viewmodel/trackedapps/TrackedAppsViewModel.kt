@@ -1,4 +1,4 @@
-package com.sali.habitino.viewmodel.apptrack
+package com.sali.habitino.viewmodel.trackedapps
 
 import android.util.Log
 import androidx.compose.runtime.toMutableStateList
@@ -16,24 +16,24 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TrackingAppsViewModel @Inject constructor(private val appsRepo: AppsRepo) :
+class TrackedAppsViewModel @Inject constructor(private val appsRepo: AppsRepo) :
     ViewModel() {
 
-    private val _trackingAppsState = MutableStateFlow(TrackingAppsState())
-    val trackingAppsState: StateFlow<TrackingAppsState>
-        get() = _trackingAppsState
+    private val _trackedAppsState = MutableStateFlow(TrackedAppsState())
+    val trackedAppsState: StateFlow<TrackedAppsState>
+        get() = _trackedAppsState
 
-    fun onAction(action: TrackingAppsAction) {
+    fun onAction(action: TrackedAppsAction) {
         when (action) {
-            is TrackingAppsAction.GetSavedApps -> getSavedApps()
-            is TrackingAppsAction.AddApp -> addApp(action.savedApp)
-            is TrackingAppsAction.RemoveApp -> removeApp(action.savedApp)
+            is TrackedAppsAction.GetSavedApps -> getSavedApps()
+            is TrackedAppsAction.AddApp -> addApp(action.savedApp)
+            is TrackedAppsAction.RemoveApp -> removeApp(action.savedApp)
         }
     }
 
     private fun getSavedApps() =
-        updateAppTrackScreenState(scope = viewModelScope, state = _trackingAppsState) {
-            _trackingAppsState.update {
+        updateAppTrackScreenState(scope = viewModelScope, state = _trackedAppsState) {
+            _trackedAppsState.update {
                 it.copy(savedApps = appsRepo.getAllSavedApps().toMutableStateList())
             }
         }
@@ -50,7 +50,7 @@ class TrackingAppsViewModel @Inject constructor(private val appsRepo: AppsRepo) 
 
 private fun updateAppTrackScreenState(
     scope: CoroutineScope,
-    state: MutableStateFlow<TrackingAppsState>,
+    state: MutableStateFlow<TrackedAppsState>,
     useCase: suspend () -> Unit
 ) {
     scope.launch(Dispatchers.IO) {

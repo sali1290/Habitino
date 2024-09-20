@@ -29,8 +29,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
+import com.sali.habitino.R
 
 @Composable
 fun AppItem(
@@ -82,7 +84,7 @@ fun AppItem(
                 IconButton(onClick = onEditClick) {
                     Icon(
                         imageVector = Icons.Default.Edit,
-                        contentDescription = "Edit message",
+                        contentDescription = stringResource(R.string.edit_message),
                     )
                 }
             }
@@ -98,13 +100,13 @@ fun AppItem(
                     if (isChecked) {
                         Icon(
                             imageVector = Icons.Default.Check,
-                            contentDescription = "Add a note to the app",
+                            contentDescription = stringResource(R.string.add_a_note_to_the_app),
                             tint = Color.Blue
                         )
                     } else {
                         Icon(
                             imageVector = Icons.Default.Add,
-                            contentDescription = "Remove app's note"
+                            contentDescription = stringResource(R.string.remove_app_s_note)
                         )
                     }
                 }

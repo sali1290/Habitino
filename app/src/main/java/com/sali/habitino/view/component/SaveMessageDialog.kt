@@ -51,7 +51,7 @@ fun SaveMessageDialog(
             OutlinedTextField(
                 value = message,
                 onValueChange = { message = it },
-                placeholder = { Text(text = stringResource(R.string.solution)) }
+                placeholder = { Text(text = stringResource(R.string.add_note_placeholder)) }
             )
 
             Spacer(modifier = Modifier.height(20.dp))

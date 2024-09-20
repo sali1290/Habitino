@@ -23,26 +23,28 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.sali.habitino.R
 import com.sali.habitino.model.dto.SavedApp
 import com.sali.habitino.view.component.AppItem
-import com.sali.habitino.view.component.ListSeparator
+import com.sali.habitino.view.component.AppItemSeparator
 import com.sali.habitino.view.component.SaveMessageDialog
-import com.sali.habitino.viewmodel.apptrack.TrackingAppsAction
-import com.sali.habitino.viewmodel.apptrack.TrackingAppsViewModel
+import com.sali.habitino.viewmodel.trackedapps.TrackedAppsAction
+import com.sali.habitino.viewmodel.trackedapps.TrackedAppsViewModel
 
 @Composable
 fun TrackedAppsScreen(
     navController: NavController,
-    trackingAppsViewModel: TrackingAppsViewModel = hiltViewModel()
+    trackedAppsViewModel: TrackedAppsViewModel = hiltViewModel()
 ) {
-    val trackingAppsState by trackingAppsViewModel.trackingAppsState.collectAsStateWithLifecycle()
+    val trackingAppsState by trackedAppsViewModel.trackedAppsState.collectAsStateWithLifecycle()
     LaunchedEffect(key1 = Unit) {
-        trackingAppsViewModel.onAction(TrackingAppsAction.GetSavedApps)
+        trackedAppsViewModel.onAction(TrackedAppsAction.GetSavedApps)
     }
 
     var savedApp by remember { mutableStateOf<SavedApp?>(null) }
@@ -55,7 +57,7 @@ fun TrackedAppsScreen(
             onConfirm = { message ->
                 savedApp?.message = message
                 savedApp?.let {
-                    trackingAppsViewModel.onAction(TrackingAppsAction.AddApp(it))
+                    trackedAppsViewModel.onAction(TrackedAppsAction.AddApp(it))
                 }
                 showSaveMessage = false
             }
@@ -70,7 +72,7 @@ fun TrackedAppsScreen(
                     modifier = Modifier.padding(horizontal = 10.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "Add new app")
+                    Text(text = stringResource(R.string.add_new_app))
                     Spacer(modifier = Modifier.width(5.dp))
                     Icon(imageVector = Icons.Default.Add, contentDescription = "Add app")
                 }
@@ -82,7 +84,7 @@ fun TrackedAppsScreen(
 
             item {
                 Text(
-                    text = "Tracked apps",
+                    text = stringResource(R.string.tracked_apps),
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center
                 )
@@ -102,11 +104,11 @@ fun TrackedAppsScreen(
                     }
                 ) { isChecked ->
                     if (isChecked)
-                        trackingAppsViewModel.onAction(TrackingAppsAction.AddApp(item))
+                        trackedAppsViewModel.onAction(TrackedAppsAction.AddApp(item))
                     else
-                        trackingAppsViewModel.onAction(TrackingAppsAction.RemoveApp(item))
+                        trackedAppsViewModel.onAction(TrackedAppsAction.RemoveApp(item))
                 }
-                ListSeparator()
+                AppItemSeparator()
             }
         }
     }
