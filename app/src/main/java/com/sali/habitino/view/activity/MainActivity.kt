@@ -62,9 +62,6 @@ fun HabitinoNavHost(modifier: Modifier) {
         startDestination = Screens.TrackedAppsScreen.route,
         modifier = modifier
     ) {
-//        composable(Screens.MainHabitScreen.route) {
-//            MainHabitScreen()
-//        }
         composable(Screens.TrackedAppsScreen.route) {
             TrackedAppsScreen(navController)
         }

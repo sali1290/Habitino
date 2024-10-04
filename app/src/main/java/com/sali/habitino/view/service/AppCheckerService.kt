@@ -20,7 +20,7 @@ class AppCheckerService : AccessibilityService() {
 
     private var isDialogShown = false
     private var lastDialogTime: Long = 0
-    private val dialogInterval = 5000 // 5 seconds
+    private val dialogInterval = 10000 // 10 seconds
 
     @Inject
     lateinit var appsRepo: AppsRepo
