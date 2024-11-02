@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.sali.habitino.model.dto.SavedApp
-import com.sali.habitino.model.utile.DrawableConverter
+import com.sali.habitino.model.util.DrawableConverter
 
 @Database(entities = [SavedApp::class], version = 1)
 @TypeConverters(DrawableConverter::class)

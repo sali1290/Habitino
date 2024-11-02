@@ -1,5 +1,6 @@
 package com.sali.habitino.view.screen
 
+import android.app.Activity
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -23,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -33,12 +35,35 @@ import com.sali.habitino.R
 import com.sali.habitino.model.dto.SavedApp
 import com.sali.habitino.view.component.AppItem
 import com.sali.habitino.view.component.AppItemSeparator
+import com.sali.habitino.view.component.PermissionDialog
 import com.sali.habitino.view.component.SaveMessageDialog
+import com.sali.habitino.view.util.checkAppPermissions
+import com.sali.habitino.view.util.grantAppRequiredPermissions
 import com.sali.habitino.viewmodel.trackedapps.TrackedAppsAction
 import com.sali.habitino.viewmodel.trackedapps.TrackedAppsViewModel
 
 @Composable
-fun TrackedAppsScreen(
+fun TrackedAppsScreen(navController: NavController) {
+    CheckPermissions()
+    TrackedApps(navController = navController)
+}
+
+@Composable
+private fun CheckPermissions() {
+    val context = LocalContext.current
+    val activity = (context as? Activity)
+    val permissionsGranted = context.checkAppPermissions()
+    val showPermissionsDialog = remember { mutableStateOf(true) }
+    if (!permissionsGranted)
+        PermissionDialog(
+            isShown = showPermissionsDialog,
+            title = stringResource(R.string.granting_permissions),
+            onRejectClick = { activity?.finish() },
+            onAcceptClick = { context.grantAppRequiredPermissions() })
+}
+
+@Composable
+private fun TrackedApps(
     navController: NavController,
     trackedAppsViewModel: TrackedAppsViewModel = hiltViewModel()
 ) {
@@ -112,5 +137,4 @@ fun TrackedAppsScreen(
             }
         }
     }
-
 }

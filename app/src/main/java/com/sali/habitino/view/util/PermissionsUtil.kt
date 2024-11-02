@@ -1,4 +1,4 @@
-package com.sali.habitino.view.utile
+package com.sali.habitino.view.util
 
 import android.Manifest
 import android.accessibilityservice.AccessibilityServiceInfo
@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.provider.Settings
+import android.util.Log
 import android.view.accessibility.AccessibilityManager
 
 fun Context.checkAppPermissions(): Boolean {
@@ -53,5 +54,6 @@ private fun checkAccessibilityPermission(context: Context): Boolean {
             }
         }
     }
+    Log.d("Permission logs", "checkAccessibilityPermission called $isAccessibilityEnabled")
     return isAccessibilityEnabled
 }

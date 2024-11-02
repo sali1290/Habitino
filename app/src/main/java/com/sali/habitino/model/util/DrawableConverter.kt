@@ -1,4 +1,4 @@
-package com.sali.habitino.model.utile
+package com.sali.habitino.model.util
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
